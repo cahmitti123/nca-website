@@ -9,8 +9,8 @@ export function FullBleed({
   return (
     <div
       className={cn(
-        // Full-bleed without extra math: center a `w-dvw` block relative to the parent.
-        "relative left-1/2 w-dvw -translate-x-1/2",
+        // Use margin-based full bleed instead of w-dvw to avoid scrollbar layout shifts/overflow
+        "relative left-[50%] right-[50%] -ml-[50vw] -mr-[50vw] w-[100vw]",
         className
       )}
     >
