@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0b1220" />
+      <stop offset="1" stop-color="#334155" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" rx="64" fill="url(#g)" />
+  <circle cx="980" cy="240" r="220" fill="#94a3b8" fill-opacity="0.16" />
+  <circle cx="260" cy="600" r="260" fill="#64748b" fill-opacity="0.16" />
+  <text x="80" y="150" font-size="56" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI" fill="#e2e8f0" letter-spacing="-1">Assurance Auto</text>
+  <text x="80" y="220" font-size="28" font-family="ui-sans-serif, system-ui, -apple-system, Segoe UI" fill="#94a3b8">Net Courtage Assurances</text>
+</svg>
+
+

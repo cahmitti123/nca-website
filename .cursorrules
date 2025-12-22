@@ -1,0 +1,31 @@
+# Project Intelligence — NCA Website (Cursor)
+
+## Non-negotiables
+- Use **shadcn/ui components** for UI primitives and patterns.
+- Keep UI **quiet and professional**: muted colors, thin borders, subtle transitions.
+- Keep TypeScript **strict**: no `any`, no ESLint disables to hide type errors.
+
+## Architecture
+- Next.js App Router.
+- `/admin/*` protected with middleware + server-side checks.
+- Supabase Auth for login/session.
+- Drizzle ORM for app data (profiles, leads, blog posts).
+
+## Rendering / SEO (Public pages)
+- **Public pages MUST be Server Components by default** (SEO-first).
+  - Applies to route group: `app/(public)/**`
+  - Do **not** add `"use client"` to public `page.tsx` / `layout.tsx` unless there is no alternative.
+  - If interactivity is needed (toggles, forms, carousels), **isolate it into small client components** and render them from a server page/layout.
+  - Avoid client-only rendering patterns in public pages: `dynamic(..., { ssr: false })`, rendering content in `useEffect`, and client-only data fetching for primary content.
+  - Prefer server-side data fetching + streaming (RSC), and use `metadata` / `generateMetadata` for SEO.
+  - It’s OK for public routes to be **SSR or SSG**; the key requirement is that content is **pre-rendered on the server** (no “blank shell” client render).
+
+## Rendering (Admin)
+- Admin pages can be Server or Client Components as needed (SEO not a concern), but keep auth + sensitive data checks server-side.
+
+## Secrets
+- Never commit secrets.
+- Client env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- Server env: `SUPABASE_SERVICE_ROLE_KEY`, `DATABASE_URL`
+
+

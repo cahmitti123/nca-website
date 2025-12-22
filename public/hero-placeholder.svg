@@ -1,0 +1,47 @@
+<svg width="1600" height="1200" viewBox="0 0 1600 1200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1600" y2="1200" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E5E7EB"/>
+      <stop offset="1" stop-color="#F3F4F6"/>
+    </linearGradient>
+    <linearGradient id="shine" x1="0" y1="0" x2="1600" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.0"/>
+      <stop offset="0.5" stop-color="#FFFFFF" stop-opacity="0.45"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0.0"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="0" y="0" width="1600" height="1200" rx="64" fill="url(#bg)"/>
+
+  <!-- subtle grid -->
+  <g opacity="0.35" stroke="#9CA3AF">
+    <path d="M0 200H1600" />
+    <path d="M0 400H1600" />
+    <path d="M0 600H1600" />
+    <path d="M0 800H1600" />
+    <path d="M0 1000H1600" />
+    <path d="M200 0V1200" />
+    <path d="M400 0V1200" />
+    <path d="M600 0V1200" />
+    <path d="M800 0V1200" />
+    <path d="M1000 0V1200" />
+    <path d="M1200 0V1200" />
+    <path d="M1400 0V1200" />
+  </g>
+
+  <!-- highlight sweep -->
+  <path
+    d="M-200 180C240 40 520 40 920 240C1320 440 1600 420 1900 220V520C1600 700 1320 720 920 520C520 320 240 320 -200 460V180Z"
+    fill="url(#shine)"
+    opacity="0.5"
+  />
+
+  <!-- center placeholder label -->
+  <g opacity="0.55">
+    <rect x="520" y="520" width="560" height="160" rx="20" fill="#FFFFFF"/>
+    <rect x="560" y="560" width="480" height="22" rx="11" fill="#E5E7EB"/>
+    <rect x="610" y="602" width="380" height="18" rx="9" fill="#D1D5DB"/>
+  </g>
+</svg>
+
+

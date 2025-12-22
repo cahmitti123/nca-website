@@ -19,23 +19,50 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
 *.pem
+.tmp
+/tmp
 
 # debug
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+lerna-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files (never commit secrets)
+.env
+.env*.local
+.env.production
 
 # vercel
 .vercel
+.vercel.json
 
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# ide / editor
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+
+# Optional: keep .env.example for onboarding
+!.env.example
+
+# Optional: memory-bank (Cursor AI artifacts - uncomment to ignore if sensitive)
+# memory-bank/
