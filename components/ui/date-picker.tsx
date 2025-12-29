@@ -5,7 +5,7 @@ import { CalendarIcon } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Calendar, type CalendarProps } from "@/components/ui/calendar"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
@@ -44,7 +44,7 @@ export type DatePickerProps = {
   locale?: string
   className?: string
   buttonClassName?: string
-  calendarProps?: Omit<CalendarProps, "mode" | "selected" | "onSelect">
+  calendarProps?: Omit<React.ComponentProps<typeof Calendar>, "mode" | "selected" | "onSelect">
   onValueChange?: (value: string) => void
 }
 

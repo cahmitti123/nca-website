@@ -4,28 +4,14 @@ import Link from "next/link";
 import { LinkCard } from "@/components/public/link-card";
 import { PageIntro, PageShell } from "@/components/public/page-shell";
 import { Button } from "@/components/ui/button";
-import { getPexelsImageUrl } from "@/lib/pexels";
 import { insuranceProducts } from "@/lib/insurance-products";
-import { PEXELS_DEFAULT_LOCALE, PEXELS_DEFAULT_REVALIDATE_SECONDS } from "@/lib/stock-images";
 
 export const metadata: Metadata = {
   title: "Offres d’assurances | Portail | Net Courtage Assurances",
   description: "Offres d’assurances et liens utiles.",
 };
 
-export default async function OffresPage() {
-  const imageUrls = await Promise.all(
-    insuranceProducts.map(async (p) => {
-      const url = await getPexelsImageUrl(p.pexelsQuery, {
-        orientation: "landscape",
-        size: "large",
-        locale: PEXELS_DEFAULT_LOCALE,
-        revalidateSeconds: PEXELS_DEFAULT_REVALIDATE_SECONDS,
-      });
-      return url ?? p.fallbackCoverSrc;
-    }),
-  );
-
+export default function OffresPage() {
   return (
     <PageShell>
       <PageIntro
@@ -40,7 +26,7 @@ export default async function OffresPage() {
       />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {insuranceProducts.map((p, idx) => (
+        {insuranceProducts.map((p) => (
           <LinkCard
             key={p.key}
             title={p.title}
@@ -48,7 +34,7 @@ export default async function OffresPage() {
             href={p.href}
             ctaLabel="Voir"
             image={{
-              src: imageUrls[idx] ?? p.fallbackCoverSrc,
+              src: p.illustrationSrc ?? p.fallbackCoverSrc,
               alt: `Illustration : ${p.title}`,
             }}
           />

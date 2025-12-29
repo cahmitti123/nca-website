@@ -1,4 +1,24 @@
-export const insuranceProducts = [
+export type InsuranceProductKey =
+  | "mutuelle-sante"
+  | "assurance-emprunteur"
+  | "assurance-auto"
+  | "assurance-moto"
+  | "assurance-prevoyance"
+  | "garantie-decennale"
+  | "complementaire-sante-senior";
+
+export type InsuranceProduct = {
+  key: InsuranceProductKey;
+  label: string;
+  title: string;
+  href: string;
+  category: string;
+  description: string;
+  illustrationSrc?: string;
+  fallbackCoverSrc: string;
+};
+
+export const insuranceProducts: readonly InsuranceProduct[] = [
   {
     key: "mutuelle-sante",
     label: "Mutuelle santé",
@@ -69,10 +89,7 @@ export const insuranceProducts = [
     illustrationSrc: "/illustrations/mutuelle sante.png",
     fallbackCoverSrc: "/cover-sante.svg",
   },
-] as const;
-
-export type InsuranceProduct = (typeof insuranceProducts)[number];
-export type InsuranceProductKey = InsuranceProduct["key"];
+];
 
 export function getInsuranceProduct(key: InsuranceProductKey): InsuranceProduct | undefined {
   return insuranceProducts.find((p) => p.key === key);
