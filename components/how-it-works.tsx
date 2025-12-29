@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import {
   ArrowRight,
+  BadgeCheck,
   Check,
   CheckCircle2,
   FileText,
   SearchCheck,
-  Sparkles,
 } from "lucide-react";
 
 export default function HowItWorks() {
@@ -29,8 +29,9 @@ export default function HowItWorks() {
               Comment ça marche
             </h2>
             <p className="text-muted-foreground mx-auto max-w-prose text-sm leading-relaxed sm:text-base">
-              Un parcours simple : vous décrivez votre besoin, nous comparons, puis on
-              finalise ensemble.
+              Un parcours simple : vous décrivez votre besoin, nous comparons, puis on finalise
+              ensemble. L’objectif : des options lisibles, des garanties expliquées clairement, et une
+              décision sereine.
             </p>
           </div>
         </div>
@@ -42,9 +43,10 @@ export default function HowItWorks() {
             icon={FileText}
             meta="2–3 min"
             title="Décrivez votre besoin"
-            description="Remplissez une demande de devis en quelques minutes. On collecte l’essentiel pour comparer efficacement."
+            description="Remplissez une demande de devis en quelques minutes. On collecte l’essentiel (profil, usage, priorités) pour comparer efficacement — sans vous demander plus que nécessaire."
             bullets={[
               "Formulaire simple, mobile-first",
+              "Devis gratuit et sans engagement",
               "Aucune obligation de souscription",
               "Réponse rapide de nos conseillers",
             ]}
@@ -56,10 +58,11 @@ export default function HowItWorks() {
             icon={SearchCheck}
             meta="Comparaison claire"
             title="Analyse & comparaison"
-            description="Nous comparons garanties, options et niveaux de couverture selon votre profil pour vous proposer des choix lisibles."
+            description="Nous comparons garanties, options et niveaux de couverture selon votre profil. Vous recevez des choix lisibles, avec une explication des points qui font vraiment la différence."
             bullets={[
               "Garanties utiles, expliquées simplement",
               "Options pertinentes selon vos priorités",
+              "Franchises, délais et exclusions clarifiés",
               "Optimisation du budget, sans superflu",
             ]}
           >
@@ -89,7 +92,7 @@ export default function HowItWorks() {
             icon={CheckCircle2}
             meta="Accompagnement"
             title="Validation & souscription"
-            description="Vous choisissez. On vous accompagne pour finaliser le dossier et mettre en place la couverture en toute clarté."
+            description="Vous choisissez. On vous accompagne pour finaliser le dossier, réunir les documents utiles, et mettre en place la couverture en toute clarté (selon contrats)."
             bullets={[
               "Aide à la décision, sans pression",
               "Dossier guidé et documents simplifiés",
@@ -194,7 +197,7 @@ function CtaBentoCard({ className }: { className?: string }) {
 
       <CardHeader className="pb-0">
         <div className="bg-primary-foreground/10 flex size-10 items-center justify-center rounded-xl border border-primary-foreground/20">
-          <Sparkles className="size-5 text-primary-foreground" aria-hidden="true" />
+          <BadgeCheck className="size-5 text-primary-foreground" aria-hidden="true" />
         </div>
         <CardTitle className="mt-4 text-xl leading-snug sm:text-2xl">
           Démarrer en 2 minutes
@@ -203,8 +206,8 @@ function CtaBentoCard({ className }: { className?: string }) {
 
       <CardContent className="space-y-4 pt-4 text-sm sm:text-base">
         <p className="text-primary-foreground/90 leading-relaxed">
-          Envoyez votre demande de devis. On revient vers vous rapidement avec des
-          options claires et adaptées.
+          Envoyez votre demande de devis. On revient vers vous rapidement avec des options claires,
+          adaptées, et une lecture simple des garanties (et de leurs limites) pour décider sereinement.
         </p>
 
         <div className="flex flex-col gap-2">
@@ -212,7 +215,7 @@ function CtaBentoCard({ className }: { className?: string }) {
             asChild
             className="group bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
-            <Link href="/contact-reclamations/demande">
+            <Link href="/demander-un-devis">
               Demander un devis
               <ArrowRight
                 className="ml-2 size-4 transition-transform group-hover:translate-x-0.5"

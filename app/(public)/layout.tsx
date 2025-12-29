@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Navbar from "@/components/navbar";
 import Footer from "@/components/footer";
+import { SiteBackground } from "@/components/public/site-background";
 
 export const metadata: Metadata = {
   title: "Net Courtage Assurances",
@@ -13,10 +14,13 @@ export default function PublicLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-dvh ">
-      <Navbar />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-10 ">{children}</main>
-      <Footer />
+    <div className="relative min-h-dvh">
+      <SiteBackground />
+      <div className="relative z-10 min-h-dvh">
+        <Navbar />
+        <main className="mx-auto w-full max-w-7xl px-4 pb-12">{children}</main>
+        <Footer />
+      </div>
     </div>
   );
 }

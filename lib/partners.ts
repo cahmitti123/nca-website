@@ -46,13 +46,13 @@ export const partners: readonly Partner[] = [
     tags: ["Courtier grossiste", "Expertise"],
   },
   {
-    name: "JL Assure",
+    name: "JI Assure",
     description:
       "Partenaire assurance : accompagnement et offres pour mieux couvrir vos besoins.",
     tags: ["Assurance", "Accompagnement"],
     logo: {
       src: "/partners-logos/JL Assure.png",
-      alt: "Logo JL Assure",
+      alt: "Logo JI Assure",
     },
   },
   {
@@ -115,6 +115,78 @@ export const partners: readonly Partner[] = [
       src: "/partners-logos/AirBag.svg",
       alt: "Logo AirBag",
     },
+  },
+  {
+    name: "Alptis",
+    description:
+      "Assureur et partenaire : solutions santé et prévoyance, avec des offres adaptées aux profils.",
+    tags: ["Assureur", "Santé & prévoyance"],
+  },
+  {
+    name: "APIVIA",
+    description:
+      "Mutuelle et partenaire : offres santé pour particuliers et professionnels.",
+    tags: ["Mutuelle", "Santé"],
+  },
+  {
+    name: "April",
+    description:
+      "Assureur : solutions d’assurance (santé, prévoyance, emprunteur…) selon les besoins.",
+    tags: ["Assureur", "Offres spécialisées"],
+  },
+  {
+    name: "ASAF",
+    description:
+      "Partenaire assurance : offres et accompagnement pour mieux protéger votre situation.",
+    tags: ["Assurance", "Partenaire"],
+  },
+  {
+    name: "ECA Assurances",
+    description:
+      "Assureur et partenaire : offres adaptées et parcours de souscription accompagnés.",
+    tags: ["Assureur", "Partenaire"],
+  },
+  {
+    name: "Eurodommage",
+    description:
+      "Assureur : solutions IARD et couverture selon votre profil et vos besoins.",
+    tags: ["Assureur", "IARD"],
+  },
+  {
+    name: "FFA",
+    description:
+      "Partenaire : informations et ressources au service de l’assurance (selon périmètre).",
+    tags: ["Partenaire", "Assurance"],
+  },
+  {
+    name: "FMA Assurances",
+    description:
+      "Assureur : offres d’assurance pour particuliers et professionnels, selon les besoins.",
+    tags: ["Assureur", "Professionnels"],
+  },
+  {
+    name: "Progeas",
+    description:
+      "Courtier grossiste : solutions d’assurance pour accompagner les courtiers et distributeurs.",
+    tags: ["Courtier grossiste", "Réseau partenaires"],
+  },
+  {
+    name: "Solly Azar",
+    description:
+      "Assureur : solutions d’assurance et accompagnement selon votre situation.",
+    tags: ["Assureur", "Partenaire"],
+  },
+  {
+    name: "Tetris",
+    description:
+      "Partenaire : solutions et outils pour accompagner la distribution d’assurance.",
+    tags: ["Partenaire", "Solutions"],
+  },
+  {
+    name: "Wazari Assurances",
+    description:
+      "Courtier grossiste : offres et solutions pour répondre à des besoins spécifiques.",
+    tags: ["Courtier grossiste", "Offres"],
   },
 ] as const;
 

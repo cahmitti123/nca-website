@@ -1,22 +1,21 @@
 ## Active Context — Current Focus
 
 ### Current work
-Build the admin foundation first:
-- Admin authentication (Supabase Auth)
-- Protected admin routes
-- Database schema + Drizzle setup
-- Admin CRUD:
-  - Users
-  - Leads
-  - Blog posts (rich editor + image upload)
+Public site structure + UX polish:
+- Public routes are organized into **Route Groups** under `app/(public)` to share layouts per page type without changing URLs.
+- Shared group layouts provide consistent navigation/structure for:
+  - Marketing pages
+  - Product/service pages
+  - Forms / contact flows
+  - Portal hub pages
+  - Legal pages
+  - Blog/content pages
 
 ### Conventions (important)
 - **SEO-first public rendering**: public routes under `app/(public)` must stay Server Components by default (no `"use client"` at the page/layout level). Interactive widgets should be isolated into small client components.
 
 ### Next steps
-- Implement Drizzle schema + migrations
-- Integrate Supabase clients (browser/server/admin)
-- Implement `/admin/login` + middleware + RBAC checks
-- Build admin UI skeleton + CRUD pages
+- Continue refining public page UI using the group layouts (clean, quiet, shadcn/ui).
+- Expand/verify content + metadata/SEO on key public pages.
 
 

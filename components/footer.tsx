@@ -1,6 +1,20 @@
 import { Separator } from "@/components/ui/separator";
+import { insuranceProducts } from "@/lib/insurance-products";
 import { siteContact } from "@/lib/site-contact";
 import Link from "next/link";
+
+const footerProductKeys = [
+  "mutuelle-sante",
+  "assurance-auto",
+  "assurance-emprunteur",
+  "assurance-moto",
+  "assurance-prevoyance",
+  "garantie-decennale",
+] as const;
+
+const footerProducts = footerProductKeys
+  .map((key) => insuranceProducts.find((p) => p.key === key))
+  .filter((p): p is NonNullable<typeof p> => Boolean(p));
 
 const Footer = () => {
   return (
@@ -20,7 +34,9 @@ const Footer = () => {
         <div className="space-y-2">
           <div className="text-xs font-medium tracking-tight">{siteContact.brandName}</div>
           <p className="text-primary-foreground/80 text-xs leading-relaxed">
-            Courtier en assurance de référence. Demandez un devis gratuit et sans engagement.
+            Courtier en assurance de référence depuis 2007. Nous proposons une large gamme de
+            solutions d’assurance pour les particuliers et les professionnels. Contactez-nous pour
+            obtenir un devis personnalisé.
           </p>
           <div className="text-primary-foreground/75 space-y-1 text-xs">
             <div>{siteContact.address}</div>
@@ -61,6 +77,11 @@ const Footer = () => {
               </Link>
             </li>
             <li>
+              <Link className="hover:text-primary-foreground transition-colors" href="/gerer-les-cookies">
+                Gérer les cookies
+              </Link>
+            </li>
+            <li>
               <Link
                 className="hover:text-primary-foreground transition-colors"
                 href="/politique-de-confidentialite"
@@ -84,7 +105,7 @@ const Footer = () => {
             <li>
               <Link
                 className="hover:text-primary-foreground transition-colors"
-                href="/contact-reclamations/demande"
+                href="/demander-un-devis"
               >
                 Demander un devis
               </Link>
@@ -100,42 +121,13 @@ const Footer = () => {
         <div className="space-y-2">
           <div className="text-xs font-medium tracking-tight">Nos assurances</div>
           <ul className="text-primary-foreground/75 space-y-1 text-xs">
-            <li>
-              <Link
-                className="hover:text-primary-foreground transition-colors"
-                href="/sante-prevoyance/mutuelle-sante"
-              >
-                Mutuelle Santé
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/assurance-auto">
-                Assurance Auto
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/assurance-emprunteur">
-                Assurance Emprunteur
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/assurance-moto">
-                Assurance Moto
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-primary-foreground transition-colors"
-                href="/sante-prevoyance/prevoyance"
-              >
-                Assurance Prévoyance
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/garantie-decennale">
-                Garantie Décennale
-              </Link>
-            </li>
+            {footerProducts.map((p) => (
+              <li key={p.key}>
+                <Link className="hover:text-primary-foreground transition-colors" href={p.href}>
+                  {p.title}
+                </Link>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -144,12 +136,52 @@ const Footer = () => {
 
       <div className="relative z-10 text-primary-foreground/75 mx-auto flex max-w-6xl flex-col gap-2 px-4 py-4 text-xs sm:flex-row sm:items-center sm:justify-between">
         <span>© {new Date().getFullYear()} Net Courtage Assurances</span>
-        <div className="flex items-center gap-3">
-          <Link className="hover:text-primary-foreground transition-colors" href="/admin">
-            Admin
-          </Link>
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
           <Link className="hover:text-primary-foreground transition-colors" href="/espace-juridique">
             Espace juridique
+          </Link>
+          <a
+            className="hover:text-primary-foreground transition-colors"
+            href="https://www.facebook.com/Netcourtageassurances"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Facebook
+          </a>
+          <a
+            className="hover:text-primary-foreground transition-colors"
+            href="https://www.pinterest.fr/netcourtageassurances/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Pinterest
+          </a>
+          <a
+            className="hover:text-primary-foreground transition-colors"
+            href="https://www.linkedin.com/company/netcourtageassurances/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LinkedIn
+          </a>
+          <a
+            className="hover:text-primary-foreground transition-colors"
+            href="https://www.instagram.com/netcourtageassurances/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Instagram
+          </a>
+          <a
+            className="hover:text-primary-foreground transition-colors"
+            href="https://www.youtube.com/@NetCourtageAssurances"
+            target="_blank"
+            rel="noreferrer"
+          >
+            YouTube
+          </a>
+          <Link className="hover:text-primary-foreground transition-colors" href="/admin">
+            Admin
           </Link>
         </div>
       </div>

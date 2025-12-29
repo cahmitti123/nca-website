@@ -2,8 +2,15 @@
 
 ### App architecture
 - **Next.js App Router** with route separation:
-  - Public routes: `app/(site)/...` (or directly under `app/`)
-  - Admin routes: `app/admin/...`
+  - Public routes: `app/(public)/...`
+    - Organized with **Route Groups** (folder names wrapped in parentheses) to share layouts without changing URLs:
+      - `app/(public)/(marketing)/...` + `app/(public)/(marketing)/(pages)/...`
+      - `app/(public)/(products)/...`
+      - `app/(public)/(forms)/...`
+      - `app/(public)/(portal)/...`
+      - `app/(public)/(legal)/...`
+      - `app/(public)/(content)/...`
+  - Admin routes: `app/(admin)/...`
 - **Middleware protection** for `/admin/*` (except `/admin/login`), plus server-side authorization checks in actions/routes.
 
 ### Rendering conventions (SEO-first public)
@@ -30,5 +37,16 @@
 - Use **shadcn/ui components** for UI primitives.
 - Styling: muted palette, subtle borders, glassy surfaces (backdrop blur) where appropriate.
 - Avoid loud colors/animations; transitions ~300–500ms max.
+
+### Public UI patterns (reusability)
+- Shared full-site background/texture is provided by `components/public/site-background.tsx` and mounted in `app/(public)/layout.tsx`.
+- Product/service pages use a reusable server component template:
+  - `components/public/product-landing.tsx` (header + Pexels cover + main/side cards)
+  - `components/public/bullet-list.tsx` for consistent feature lists.
+- Hub/list pages can use:
+  - `components/public/link-card.tsx` (optional image + CTA).
+- Central data sources (avoid duplicating links/queries):
+  - `lib/insurance-products.ts` for product links + labels + Pexels queries.
+  - `lib/stock-images.ts` for shared Pexels query helpers + default locale/revalidate.
 
 

@@ -15,6 +15,7 @@
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY` (server-only)
 - `DATABASE_URL` (server-only; Postgres connection string)
+- `PEXELS_API_KEY` (server-only; optional, used for Pexels image placeholders in marketing UI)
 
 ### Package manager
 - `pnpm` (preferred, repo includes `pnpm-lock.yaml`)

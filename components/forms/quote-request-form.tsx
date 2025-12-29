@@ -3,12 +3,13 @@
 import * as React from "react";
 import { useActionState } from "react";
 
-import { submitQuoteRequestAction } from "@/app/(public)/contact-reclamations/actions";
+import { submitQuoteRequestAction } from "@/app/(public)/(forms)/contact-reclamations/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Select,
   SelectContent,
@@ -47,6 +48,15 @@ export function QuoteRequestForm({
 
   const [insuranceType, setInsuranceType] = React.useState<string>(initial);
   const [state, formAction, isPending] = useActionState(submitQuoteRequestAction, initialState);
+  const birthDateMax = React.useMemo(() => new Date(), []);
+  const birthDateStartMonth = React.useMemo(
+    () => new Date(birthDateMax.getFullYear() - 100, 0, 1),
+    [birthDateMax],
+  );
+  const birthDateEndMonth = React.useMemo(
+    () => new Date(birthDateMax.getFullYear(), 11, 31),
+    [birthDateMax],
+  );
 
   return (
     <form action={formAction} className="space-y-5">
@@ -54,7 +64,7 @@ export function QuoteRequestForm({
 
       {lockInsuranceType ? (
         <div className="grid gap-1.5">
-          <Label htmlFor="insuranceType">Type d’assurance</Label>
+          <Label htmlFor="insuranceType">Type d&apos;assurances</Label>
           <input type="hidden" name="insuranceType" value={insuranceType} />
           <div className="border-input bg-muted/20 text-sm rounded-md border px-3 py-2">
             {insuranceType || "—"}
@@ -62,7 +72,7 @@ export function QuoteRequestForm({
         </div>
       ) : (
         <div className="grid gap-1.5">
-          <Label htmlFor="insuranceType">Type d’assurance</Label>
+          <Label htmlFor="insuranceType">Type d&apos;assurances</Label>
           <input type="hidden" name="insuranceType" value={insuranceType} />
           <Select value={insuranceType} onValueChange={setInsuranceType}>
             <SelectTrigger id="insuranceType" className="w-full">
@@ -81,27 +91,37 @@ export function QuoteRequestForm({
 
       <div className="grid gap-4 md:grid-cols-2">
         <div className="grid gap-1.5">
-          <Label htmlFor="fullName">Nom et prénom</Label>
+          <Label htmlFor="fullName">Veuillez saisir votre nom et prénom</Label>
           <Input id="fullName" name="fullName" autoComplete="name" required />
         </div>
 
         <div className="grid gap-1.5">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">Veuillez saisir votre Email</Label>
           <Input id="email" name="email" type="email" autoComplete="email" required />
         </div>
 
         <div className="grid gap-1.5">
-          <Label htmlFor="phone">Téléphone</Label>
+          <Label htmlFor="phone">Veuillez saisir votre téléphone</Label>
           <Input id="phone" name="phone" type="tel" autoComplete="tel" />
         </div>
 
         <div className="grid gap-1.5">
           <Label htmlFor="birthDate">Date de naissance</Label>
-          <Input id="birthDate" name="birthDate" type="date" />
+          <DatePicker
+            id="birthDate"
+            name="birthDate"
+            placeholder="Choisir une date"
+            calendarProps={{
+              captionLayout: "dropdown",
+              startMonth: birthDateStartMonth,
+              endMonth: birthDateEndMonth,
+              disabled: { after: birthDateMax },
+            }}
+          />
         </div>
 
         <div className="grid gap-1.5 md:col-span-2">
-          <Label htmlFor="postalCode">Code postal</Label>
+          <Label htmlFor="postalCode">Veuillez saisir votre code postal</Label>
           <Input id="postalCode" name="postalCode" inputMode="numeric" autoComplete="postal-code" />
         </div>
 
@@ -114,8 +134,8 @@ export function QuoteRequestForm({
       <label className="flex items-start gap-3 text-sm leading-relaxed">
         <Checkbox id="consentToContact" name="consentToContact" />
         <span>
-          Je donne mon consentement pour être contacté(e) au sujet de ma demande, conformément au
-          RGPD.
+          Je donne mon consentement pour être contacté(e) au sujet de ma demande de devis,
+          conformément au RGPD.
         </span>
       </label>
 
@@ -128,7 +148,7 @@ export function QuoteRequestForm({
       ) : null}
 
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? "Envoi…" : "Envoyer ma demande"}
+        {isPending ? "Envoi…" : "Continuer"}
       </Button>
     </form>
   );

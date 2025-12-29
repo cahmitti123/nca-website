@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useActionState } from "react";
 
-import { submitComplaintAction } from "@/app/(public)/contact-reclamations/actions";
+import { submitComplaintAction } from "@/app/(public)/(forms)/contact-reclamations/actions";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -99,7 +99,7 @@ export function ComplaintForm() {
       ) : null}
 
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? "Envoi…" : "Envoyer la réclamation"}
+        {isPending ? "Envoi…" : "Envoyer"}
       </Button>
     </form>
   );

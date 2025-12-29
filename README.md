@@ -134,6 +134,7 @@ After first deployment, visit `https://<your-domain>/admin/setup` to create your
 | `pnpm db:generate`   | Generate Drizzle migrations from schema changes  |
 | `pnpm db:migrate`    | Apply migrations to database                     |
 | `pnpm db:seed`       | Seed blog posts (add `--dry-run` to preview)     |
+| `pnpm db:import-wp-blog` | Import published posts from WordPress (add `--dry-run` / `--overwrite`) |
 
 ## Notes
 

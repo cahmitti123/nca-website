@@ -4,7 +4,7 @@ import { BrandBand } from "@/components/public/brand-band";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { siteContact } from "@/lib/site-contact";
-import { ArrowRight, PhoneCall, Sparkles } from "lucide-react";
+import { ArrowRight, BadgeCheck, PhoneCall } from "lucide-react";
 
 export function CtaBand() {
   return (
@@ -13,7 +13,7 @@ export function CtaBand() {
         <div className="space-y-4">
           <div className="flex flex-wrap items-center gap-2">
             <Badge className="bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/15">
-              <Sparkles className="mr-1 size-3.5" aria-hidden="true" />
+              <BadgeCheck className="mr-1 size-3.5" aria-hidden="true" />
               Gratuit
             </Badge>
             <Badge className="bg-primary-foreground/15 text-primary-foreground hover:bg-primary-foreground/15">
@@ -28,8 +28,10 @@ export function CtaBand() {
             Obtenez votre devis personnalisé dès maintenant
           </h2>
           <p className="max-w-prose text-pretty text-sm leading-relaxed text-primary-foreground/85 sm:text-base">
-            Découvrez nos offres compétitives et bénéficiez de notre accompagnement dédié.
-            Basés à Rozay-en-Brie, nous vous accompagnons avec professionnalisme et expertise.
+            Décrivez votre besoin en quelques minutes : nous revenons vers vous avec des options
+            claires, adaptées à votre profil, et des explications compréhensibles (garanties, niveaux,
+            franchises, exclusions). Basés à Rozay-en-Brie, nous vous accompagnons avec
+            professionnalisme, de la comparaison jusqu’à la mise en place.
           </p>
         </div>
 
@@ -39,7 +41,7 @@ export function CtaBand() {
             size="lg"
             className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
           >
-            <Link href="/contact-reclamations/demande">
+            <Link href="/demander-un-devis">
               Demander mon devis <ArrowRight className="ml-1 size-4" aria-hidden="true" />
             </Link>
           </Button>

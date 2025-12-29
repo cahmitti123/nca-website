@@ -24,8 +24,8 @@ const Stats = () => {
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <div className="border-muted/60 bg-background/80 text-foreground backdrop-blur-sm rounded-2xl border p-5 z-30">
               <div className="flex items-start gap-3">
-                <div className="bg-background text-foreground flex size-9 items-center justify-center rounded-md border">
-                  <Eye className="size-4 text-primary" aria-hidden="true" />
+                <div className="bg-background text-foreground flex size-9 items-center  justify-center rounded-md border">
+                  <Eye className="size-4 text-primary aspect-square" aria-hidden="true" />
                 </div>
                 <div className="space-y-1">
                   <div className="text-base font-semibold">Clarté</div>

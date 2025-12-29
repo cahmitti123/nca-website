@@ -9,9 +9,12 @@
 ### What works
 - Baseline UI kit (shadcn/ui) and theme tokens in `app/globals.css`.
 - Fixed admin shell: fixed navbar + fixed sidebar + scrollable content (ScrollArea).
+- Public UI scaffolding: route-group layouts, global textured background, and reusable templates (`ProductLanding`, `LinkCard`).
+- Pexels integration for realistic placeholder images (server-only via `PEXELS_API_KEY`).
 
 ### What’s next
-- Build out public marketing pages (SEO-first Server Components).
+- Continue polishing public pages (SEO-first Server Components), using route groups + shared layouts per page type.
+- Expand/verify content + metadata/SEO on key landing pages.
 
 ### Known risks / decisions
 - Blog editor format: use a structured editor (e.g., Tiptap) and store HTML + JSON for safe rendering and custom blocks.

@@ -20,7 +20,9 @@ const Features = () => {
             Pourquoi passer par NCA ?
           </h2>
           <p className="text-muted-foreground mx-auto max-w-prose text-sm leading-relaxed sm:text-base">
-            Un accompagnement simple, transparent et adapté à votre situation.
+            Un accompagnement simple, transparent et adapté à votre situation. Nous vous aidons à
+            comparer, à comprendre les garanties, et à choisir une couverture cohérente — sans
+            complexité inutile.
           </p>
         </div>
       </div>
@@ -42,7 +44,10 @@ const Features = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 pt-4 text-sm text-muted-foreground sm:text-base">
-              <p>Nous analysons vos besoins et comparons les solutions disponibles.</p>
+              <p>
+                Nous analysons vos besoins et comparons les solutions disponibles pour vous proposer
+                des choix lisibles.
+              </p>
               <p>
                 <Tooltip content="La demande de devis n’implique aucune obligation.">
                   <span className="underline decoration-dotted underline-offset-4">
@@ -50,6 +55,10 @@ const Features = () => {
                   </span>
                 </Tooltip>{" "}
                 et avec des explications compréhensibles.
+              </p>
+              <p>
+                Vous savez ce qui est inclus, ce qui ne l’est pas, et ce qui change d’un niveau de
+                couverture à l’autre.
               </p>
             </CardContent>
           </Card>
@@ -75,7 +84,10 @@ const Features = () => {
                 Un conseiller vous aide à choisir les garanties utiles (et éviter le
                 superflu).
               </p>
-              <p>Objectif : le bon niveau de protection au bon prix.</p>
+              <p>
+                Objectif : le bon niveau de protection au bon prix, en tenant compte de votre profil
+                (usage, situation, priorités) et de votre budget.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -96,8 +108,11 @@ const Features = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 pt-4 text-sm text-muted-foreground sm:text-base">
-              <p>Demandez un devis en quelques minutes.</p>
-              <p>Nous vous recontactons rapidement pour finaliser votre dossier.</p>
+              <p>Demandez un devis en quelques minutes, sans démarche compliquée.</p>
+              <p>
+                Nous vous recontactons rapidement pour finaliser votre dossier, répondre aux questions
+                et valider les documents utiles.
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -105,7 +120,7 @@ const Features = () => {
 
       <div className="flex flex-col items-center justify-center gap-2 sm:flex-row sm:flex-wrap">
         <Button asChild>
-          <Link href="/contact-reclamations/demande">Je demande mon devis</Link>
+          <Link href="/demander-un-devis">Je demande mon devis</Link>
         </Button>
         <Button variant="outline" asChild>
           <Link href="/portail/offres">Découvrir nos assurances</Link>

@@ -1,7 +1,14 @@
 import Link from "next/link";
+import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { getPexelsImageUrl } from "@/lib/pexels";
+import {
+  pexelsBlogQueryForSlug,
+  PEXELS_DEFAULT_LOCALE,
+  PEXELS_DEFAULT_REVALIDATE_SECONDS,
+} from "@/lib/stock-images";
 import { Newspaper } from "lucide-react";
 
 export type BlogPostPreview = {
@@ -13,7 +20,19 @@ export type BlogPostPreview = {
   publishedAt: Date | null;
 };
 
-export default function Blog({ posts }: { posts: BlogPostPreview[] }) {
+export default async function Blog({ posts }: { posts: BlogPostPreview[] }) {
+  const coverSources = await Promise.all(
+    posts.map(async (p) => {
+      if (p.coverImageUrl) return p.coverImageUrl;
+      return await getPexelsImageUrl(pexelsBlogQueryForSlug(p.slug), {
+        orientation: "landscape",
+        size: "large",
+        locale: PEXELS_DEFAULT_LOCALE,
+        revalidateSeconds: PEXELS_DEFAULT_REVALIDATE_SECONDS,
+      });
+    }),
+  );
+
   return (
     <section className="space-y-10 py-24">
       <div className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center">
@@ -41,15 +60,26 @@ export default function Blog({ posts }: { posts: BlogPostPreview[] }) {
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((p) => (
+          {posts.map((p, idx) => {
+            const coverSrc = coverSources[idx];
+            return (
             <Link
               key={p.id}
               href={`/blog/${p.slug}`}
               className="group flex flex-col overflow-hidden rounded-2xl border border-transparent bg-transparent transition-all hover:border-muted/60 hover:bg-muted/20 hover:shadow-sm"
             >
-              <div className="aspect-video w-full overflow-hidden rounded-xl bg-muted">
-                {/* Fallback or real image would go here */}
-                <div className="h-full w-full bg-gradient-to-br from-muted to-muted/50 transition-transform duration-300 group-hover:scale-105" />
+              <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-muted">
+                {coverSrc ? (
+                  <Image
+                    src={coverSrc}
+                    alt={`Illustration : ${p.title}`}
+                    fill
+                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="h-full w-full bg-gradient-to-br from-muted to-muted/50 transition-transform duration-300 group-hover:scale-105" />
+                )}
               </div>
               <div className="flex flex-1 flex-col p-4">
                 <div className="flex items-center gap-2 mb-2">
@@ -76,7 +106,8 @@ export default function Blog({ posts }: { posts: BlogPostPreview[] }) {
                 </div>
               </div>
             </Link>
-          ))}
+          );
+          })}
         </div>
       )}
     </section>

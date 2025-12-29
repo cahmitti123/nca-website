@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import type { CSSProperties } from "react";
 import { ComponentPropsWithoutRef } from "react";
 
 interface MarqueeProps extends ComponentPropsWithoutRef<"div"> {
@@ -41,6 +42,11 @@ export function Marquee({
   repeat = 4,
   ...props
 }: MarqueeProps) {
+  // Ensure reverse direction always wins vs `animation` shorthand utilities.
+  const marqueeItemStyle: CSSProperties | undefined = reverse
+    ? { animationDirection: "reverse" }
+    : undefined;
+
   return (
     <div
       {...props}
@@ -58,12 +64,12 @@ export function Marquee({
         .map((_, i) => (
           <div
             key={i}
+            style={marqueeItemStyle}
             className={cn("flex shrink-0 justify-around [gap:var(--gap)]", {
               "animate-marquee flex-row": !vertical,
               "animate-marquee-vertical flex-col": vertical,
               "motion-reduce:animate-none": true,
               "group-hover:[animation-play-state:paused]": pauseOnHover,
-              "[animation-direction:reverse]": reverse,
             })}
           >
             {children}

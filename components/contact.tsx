@@ -29,8 +29,8 @@ const Contact = () => (
             Nous contacter
           </h2>
           <p className="mx-auto max-w-prose text-sm leading-relaxed sm:text-base text-primary-foreground/80 dark:text-muted-foreground">
-            Une question, un devis, ou une réclamation ? Nous vous répondons
-            rapidement.
+            Une question, un devis, ou une réclamation ? Nous vous répondons rapidement et vous aidons
+            à choisir la bonne démarche : demande de devis, informations, ou traitement de réclamation.
           </p>
         </div>
       </div>
@@ -106,7 +106,7 @@ const Contact = () => (
         <span aria-hidden="true">·</span>{" "}
         <Link
           className="transition-opacity hover:opacity-100 opacity-80 underline decoration-dotted underline-offset-4"
-          href="/contact-reclamations/demande"
+          href="/demander-un-devis"
         >
           Demander un devis en ligne
         </Link>
