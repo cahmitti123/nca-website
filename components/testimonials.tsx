@@ -154,15 +154,75 @@ const Testimonials = async () => {
     src: portraitUrls[idx] ?? t.fallbackSrc,
   }));
 
-  const columns = 4;
-  const columnItems = Array.from({ length: columns }, () => [] as (typeof testimonials)[number][]);
+  const columnItems4 = Array.from({ length: 4 }, () => [] as (typeof testimonials)[number][]);
+  const columnItems3 = Array.from({ length: 3 }, () => [] as (typeof testimonials)[number][]);
+  const rowItems2 = Array.from({ length: 2 }, () => [] as (typeof testimonials)[number][]);
+
   for (const [idx, t] of testimonials.entries()) {
-    columnItems[idx % columns]?.push(t);
+    columnItems4[idx % 4]?.push(t);
+    columnItems3[idx % 3]?.push(t);
+    rowItems2[idx % 2]?.push(t);
   }
-  
 
   const speeds = [25, 32, 19, 45, 28, 36];
   type CSSVarStyle = CSSProperties & { [key: `--${string}`]: string | number };
+
+  const renderTestimonialCard = (
+    t: (typeof testimonials)[number],
+    key: string,
+    variant: "desktop" | "mobile" = "desktop",
+  ) => (
+    <Card
+      key={key}
+      className={[
+        "border-muted/60 bg-background/70 shadow-none ring-0 py-0",
+        variant === "mobile" ? "h-52" : null,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      size="sm"
+    >
+      <CardContent
+        className={[
+          "p-4",
+          variant === "mobile" ? "flex h-full flex-col" : null,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <div className="flex items-center gap-1 text-muted-foreground">
+          {[0, 1, 2, 3, 4].map((starIdx) => (
+            <Star key={starIdx} className="size-3.5 fill-primary text-primary" aria-hidden="true" />
+          ))}
+        </div>
+
+        <p
+          className={[
+            "mt-3 text-sm leading-relaxed text-foreground/90",
+            variant === "mobile" ? "line-clamp-3 min-h-[4.25rem]" : null,
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          “{t.quote}”
+        </p>
+
+        <div className={variant === "mobile" ? "mt-auto flex items-center gap-3 pt-4" : "mt-4 flex items-center gap-3"}>
+          <Image
+            src={t.src}
+            alt={t.name}
+            width={40}
+            height={40}
+            className="ring-foreground/10 size-10 rounded-full object-cover ring-1"
+          />
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium">{t.name}</p>
+            <p className="text-muted-foreground truncate text-xs">{t.designation}</p>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 
   return (
     <BrandBand variant="soft">
@@ -189,10 +249,45 @@ const Testimonials = async () => {
           </div>
         </div>
 
-        <div className="grid gap-2 sm:grid-cols-2 sm:gap-3 lg:grid-cols-3 xl:grid-cols-4">
-          {columnItems.map((items, colIdx) => (
+        {/* Mobile/tablet: 2 horizontal marquee rows (max 2 lines) */}
+        <div className="space-y-3 lg:hidden">
+          {rowItems2.map((items, rowIdx) => (
             <div
-              key={colIdx}
+              key={rowIdx}
+              className={[
+                "relative overflow-hidden",
+                // Fade testimonials at the left/right edges of each row.
+                "mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
+                "[-webkit-mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]",
+              ].join(" ")}
+            >
+              <Marquee
+                pauseOnHover
+                reverse={rowIdx % 2 === 1}
+                repeat={4}
+                style={
+                  {
+                    "--duration": `${(speeds[rowIdx % speeds.length] ?? 40) + 8}s`,
+                    "--gap": "0.75rem",
+                  } as CSSVarStyle
+                }
+                className="py-2"
+              >
+                {items.map((t, idx) => (
+                  <div key={`row-${rowIdx}-${idx}`} className="w-72 shrink-0">
+                    {renderTestimonialCard(t, `row-card-${rowIdx}-${idx}`, "mobile")}
+                  </div>
+                ))}
+              </Marquee>
+            </div>
+          ))}
+        </div>
+
+        {/* Desktop: 3 columns */}
+        <div className="hidden gap-3 lg:grid xl:hidden lg:grid-cols-3">
+          {columnItems3.map((items, colIdx) => (
+            <div
+              key={`col3-${colIdx}`}
               className={[
                 "relative h-120 overflow-hidden",
                 // Fade testimonials at the top/bottom edges of each column.
@@ -211,49 +306,40 @@ const Testimonials = async () => {
                     "--gap": "0.75rem",
                   } as CSSVarStyle
                 }
-                className={[
-                  "h-full p-2",
-                ].join(" ")}
+                className="h-full p-2"
               >
-                {items.map((t, idx) => (
-                  <Card
-                    key={`${colIdx}-${idx}`}
-                    className="border-muted/60 bg-background/70 shadow-none ring-0 py-0"
-                    size="sm"
-                  >
-                    <CardContent className="p-4">
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        {[0, 1, 2, 3, 4].map((starIdx) => (
-                          <Star
-                            key={starIdx}
-                            className="size-3.5 fill-primary text-primary"
-                            aria-hidden="true"
-                          />
-                        ))}
-                      </div>
+                {items.map((t, idx) => renderTestimonialCard(t, `col3-${colIdx}-${idx}`, "desktop"))}
+              </Marquee>
+            </div>
+          ))}
+        </div>
 
-                      <p className="mt-3 text-sm leading-relaxed text-foreground/90">
-                        “{t.quote}”
-                      </p>
-
-                      <div className="mt-4 flex items-center gap-3">
-                        <Image
-                          src={t.src}
-                          alt={t.name}
-                          width={40}
-                          height={40}
-                          className="ring-foreground/10 size-10 rounded-full object-cover ring-1"
-                        />
-                        <div className="min-w-0">
-                          <p className="truncate text-sm font-medium">{t.name}</p>
-                          <p className="text-muted-foreground truncate text-xs">
-                            {t.designation}
-                          </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+        {/* Large desktop: 4 columns */}
+        <div className="hidden gap-3 xl:grid xl:grid-cols-4">
+          {columnItems4.map((items, colIdx) => (
+            <div
+              key={`col4-${colIdx}`}
+              className={[
+                "relative h-120 overflow-hidden",
+                // Fade testimonials at the top/bottom edges of each column.
+                "mask-[linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]",
+                "[-webkit-mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]",
+              ].join(" ")}
+            >
+              <Marquee
+                vertical
+                reverse={colIdx % 2 === 1}
+                pauseOnHover
+                repeat={2}
+                style={
+                  {
+                    "--duration": `${speeds[colIdx % speeds.length] ?? 40}s`,
+                    "--gap": "0.75rem",
+                  } as CSSVarStyle
+                }
+                className="h-full p-2"
+              >
+                {items.map((t, idx) => renderTestimonialCard(t, `col4-${colIdx}-${idx}`, "desktop"))}
               </Marquee>
             </div>
           ))}
