@@ -9,15 +9,12 @@ export const metadata: Metadata = {
     "Découvrez les meilleures offres d’assurance auto chez Net Courtage Assurances. Protégez votre voiture et votre budget avec nos formules sur mesure.",
 };
 
+import { ShieldCheck, UserCheck, Wrench, AlertTriangle } from "lucide-react";
+
 export default function AssuranceAutoPage() {
   const product = getInsuranceProduct("assurance-auto");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Assurance Auto" },
-      ]}
       badges={["Auto", "Tarifs compétitifs"]}
       title="Assurance Auto"
       description="Assurer votre voiture à un tarif compétitif peut sembler complexe, mais c’est réalisable. Nous vous aidons à définir vos besoins, à comparer les garanties et à choisir une formule adaptée à votre véhicule, votre usage et votre budget."
@@ -28,23 +25,51 @@ export default function AssuranceAutoPage() {
       }}
       mainCard={{
         title: "Formules & options",
-        description:
-          "Pour bien choisir, on part de l’essentiel (obligations, usage, valeur du véhicule), puis on ajuste le niveau de couverture : au tiers, intermédiaire ou tous risques, avec les options réellement utiles.",
-        bullets: [
-          "Tiers, tiers étendu, tous risques.",
-          "Assistance, véhicule de remplacement, bris de glace.",
-          "Conducteur principal, jeune conducteur, bonus/malus.",
-          "Choix des franchises et niveau de protection.",
-          "Vol, incendie, événements climatiques (selon contrats).",
-        ],
+        description: "Pour bien choisir, on part de l’essentiel (obligations, usage, valeur du véhicule), puis on ajuste le niveau de couverture.",
       }}
       sideCard={{
-        title: "Conseil",
-        description:
-          "Nous cherchons l’équilibre entre garanties utiles et budget, selon votre situation et votre véhicule.",
-        bullets: ["Devis gratuit", "Comparaison lisible", "Accompagnement jusqu’à la souscription"],
+        title: "Notre Conseil Pro",
+        description: "Ne payez pas pour des garanties inutiles. Pour une voiture de >10 ans, le 'Tiers Étendu' est souvent le meilleur rapport qualité/prix.",
+        bullets: ["Audit gratuit", "Comparaison multi-assureurs", "Zéro frais cachés"],
         actions: [{ label: "Demander un devis", href: "/demander-un-devis" }],
       }}
+      features={[
+        {
+          title: "Formules sur-mesure",
+          description: "Du Tiers simple au Tous Risques intégral, choisissez le niveau exact de protection dont vous avez besoin.",
+          icon: ShieldCheck,
+          colSpan: 2,
+        },
+        {
+          title: "Jeunes Conducteurs",
+          description: "Des solutions pour limiter la surprime et démarrer avec un budget maîtrisé.",
+          icon: UserCheck
+        },
+        {
+          title: "Assistance 24/7",
+          description: "Dépannage 0 km, véhicule de remplacement et assistance aux personnes inclus ou en option.",
+          icon: Wrench
+        },
+        {
+          title: "Garantie Conducteur",
+          description: "Indispensable pour vous protéger vous-même en cas d'accident responsable.",
+          icon: AlertTriangle
+        }
+      ]}
+      faq={[
+        {
+          question: "Quelle différence entre Tiers et Tiers Étendu ?",
+          answer: "Le Tiers couvre uniquement les dommages causés aux autres. Le Tiers Étendu ajoute généralement le bris de glace, le vol et l'incendie."
+        },
+        {
+          question: "Puis-je assurer une voiture temporairement ?",
+          answer: "Oui, nous proposons des assurances temporaires (de 1 à 90 jours) idéales pour le transit, l'export ou le prêt d'un véhicule."
+        },
+        {
+          question: "Comment fonctionne le bonus-malus ?",
+          answer: "Chaque année sans accident responsable, votre prime baisse de 5%. Au contraire, un accident responsable entraine une majoration de 25%."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

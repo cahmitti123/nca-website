@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,18 +12,22 @@ export const metadata: Metadata = {
 
 export default function ArticlesDiversPage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Articles divers"
-        description={
-          <>
-            Retrouvez des conseils et des contenus utiles autour de l’assurance. Nos articles vous
-            aident à mieux comprendre les garanties, les démarches et les points de vigilance.
-          </>
-        }
-      />
-
-      <div className="grid gap-4 sm:grid-cols-2">
+    <PortalPage
+      path="/portail/articles-divers"
+      title="Articles divers"
+      description={
+        <>
+          Retrouvez des conseils et des contenus utiles autour de l’assurance. Nos articles vous
+          aident à mieux comprendre les garanties, les démarches et les points de vigilance.
+        </>
+      }
+      highlights={[
+        "Conseils pratiques pour comprendre les garanties et les démarches.",
+        "Accès rapide à nos ressources (blog, guides, documents).",
+        "Une question précise ? Faites une demande et on vous recontacte.",
+      ]}
+    >
+      <div className="grid gap-4 md:grid-cols-3">
         <Card className="border-muted/60">
           <CardHeader className="pb-0">
             <CardTitle className="text-base">Blog</CardTitle>
@@ -34,6 +38,20 @@ export default function ArticlesDiversPage() {
             </p>
             <Button size="sm" variant="outline" asChild>
               <Link href="/blog">Voir le blog</Link>
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-muted/60">
+          <CardHeader className="pb-0">
+            <CardTitle className="text-base">Divers assurances</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 pt-4">
+            <p className="text-muted-foreground text-sm">
+              Un rappel clair des points à vérifier (exclusions, franchises, délais).
+            </p>
+            <Button size="sm" variant="outline" asChild>
+              <Link href="/portail/divers-assurances">Accéder</Link>
             </Button>
           </CardContent>
         </Card>
@@ -52,7 +70,7 @@ export default function ArticlesDiversPage() {
           </CardContent>
         </Card>
       </div>
-    </PageShell>
+    </PortalPage>
   );
 }
 

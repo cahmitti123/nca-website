@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,12 +12,16 @@ export const metadata: Metadata = {
 
 export default function PortailSantePage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Assurances santé"
-        description="Pour une présentation complète, consultez notre page mutuelle santé."
-      />
-
+    <PortalPage
+      path="/portail/assurances-personnelles/sante"
+      title="Assurances santé"
+      description="Pour une présentation complète, consultez notre page mutuelle santé."
+      highlights={[
+        "Choisissez un niveau de garanties adapté (soins courants, hospitalisation, dentaire, optique).",
+        "Comparez remboursements, délais de carence et conditions de prise en charge.",
+        "Accédez à la page détaillée et démarrez une demande de devis si besoin.",
+      ]}
+    >
       <Card className="border-muted/60">
         <CardHeader className="pb-0">
           <CardTitle className="text-base">Mutuelle Santé</CardTitle>
@@ -36,7 +40,7 @@ export default function PortailSantePage() {
           </div>
         </CardContent>
       </Card>
-    </PageShell>
+    </PortalPage>
   );
 }
 

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { BulletList } from "@/components/public/bullet-list";
 import { ContactCtaCard } from "@/components/public/contact-cta-card";
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -13,23 +14,29 @@ export const metadata: Metadata = {
 
 export default function DiversAssurancesPage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Divers assurances"
-        description="Informations utiles, rappels et liens pratiques pour mieux comprendre les assurances."
-      />
-
+    <PortalPage
+      path="/portail/divers-assurances"
+      title="Divers assurances"
+      description="Informations utiles, rappels et liens pratiques pour mieux comprendre les assurances."
+      highlights={[
+        "Rappels clés pour lire un contrat : garanties, exclusions, franchises, délais.",
+        "Ressources complémentaires : articles, documents, informations réglementaires.",
+        "Un besoin précis ? Démarrez une demande et on vous recontacte rapidement.",
+      ]}
+    >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="border-muted/60">
           <CardHeader className="pb-0">
             <CardTitle className="text-base">Comprendre &amp; comparer</CardTitle>
           </CardHeader>
-          <CardContent className="pt-4 text-sm text-muted-foreground">
-            <ul className="list-disc space-y-2 pl-4">
-              <li>Garanties, franchises, exclusions : les points à vérifier.</li>
-              <li>Les informations utiles avant une demande de devis.</li>
-              <li>Choisir le bon niveau de protection au bon prix.</li>
-            </ul>
+          <CardContent className="pt-4">
+            <BulletList
+              items={[
+                "Garanties, franchises, exclusions : les points à vérifier.",
+                "Les informations utiles avant une demande de devis.",
+                "Choisir le bon niveau de protection au bon prix.",
+              ]}
+            />
           </CardContent>
         </Card>
 
@@ -58,7 +65,7 @@ export default function DiversAssurancesPage() {
           secondaryAction={null}
         />
       </div>
-    </PageShell>
+    </PortalPage>
   );
 }
 

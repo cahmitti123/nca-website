@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { ContactCtaCard } from "@/components/public/contact-cta-card";
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -13,17 +13,21 @@ export const metadata: Metadata = {
 
 export default function EntreprisePage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Assurances entreprise"
-        description={
-          <>
-            Nous accompagnons les professionnels sur leurs besoins d’assurance. Décrivez votre
-            activité et vos chantiers : nous vous orientons vers une solution adaptée.
-          </>
-        }
-      />
-
+    <PortalPage
+      path="/portail/assurances-entreprise"
+      title="Assurances entreprise"
+      description={
+        <>
+          Nous accompagnons les professionnels sur leurs besoins d’assurance. Décrivez votre activité
+          et vos chantiers : nous vous orientons vers une solution adaptée.
+        </>
+      }
+      highlights={[
+        "Solutions adaptées aux professionnels, selon votre activité et vos risques.",
+        "Aide au cadrage : garanties utiles, justificatifs, délais et franchises.",
+        "Démarrez une demande de devis pour être recontacté rapidement.",
+      ]}
+    >
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card className="border-muted/60">
           <CardHeader className="pb-0">
@@ -61,7 +65,7 @@ export default function EntreprisePage() {
           secondaryAction={null}
         />
       </div>
-    </PageShell>
+    </PortalPage>
   );
 }
 

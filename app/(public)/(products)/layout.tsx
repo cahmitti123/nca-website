@@ -1,14 +1,11 @@
 import * as React from "react";
 
+import { InnerSectionLayout } from "@/components/public/inner-section-layout";
+
 export default function ProductsLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="py-10 sm:py-12">
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
-    </div>
-  );
+  return <InnerSectionLayout section="products">{children}</InnerSectionLayout>;
 }
-

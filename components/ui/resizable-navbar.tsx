@@ -14,21 +14,26 @@ import { useOutsideClick } from "@/hooks/use-outside-click";
 import Link from "next/link";
 
 
+type NavbarVariant = "floating" | "solid";
+
 interface NavbarProps {
   children: React.ReactNode;
   className?: string;
+  variant?: NavbarVariant;
 }
 
 interface NavBodyProps {
   children: React.ReactNode;
   className?: string;
   visible?: boolean;
+  variant?: NavbarVariant;
 }
 
 interface NavItemsProps {
   items: {
     name: string;
     link: string;
+    active?: boolean;
   }[];
   className?: string;
   onItemClick?: () => void;
@@ -38,6 +43,7 @@ interface MobileNavProps {
   children: React.ReactNode;
   className?: string;
   visible?: boolean;
+  variant?: NavbarVariant;
 }
 
 interface MobileNavHeaderProps {
@@ -52,8 +58,9 @@ interface MobileNavMenuProps {
   onClose: () => void;
 }
 
-export const Navbar = ({ children, className }: NavbarProps) => {
+export const Navbar = ({ children, className, variant = "floating" }: NavbarProps) => {
   const reduceMotion = useReducedMotion();
+  const isSolid = variant === "solid";
   const ref = useRef<HTMLDivElement>(null);
   const { scrollY } = useScroll({
     target: ref,
@@ -62,12 +69,15 @@ export const Navbar = ({ children, className }: NavbarProps) => {
   const [visible, setVisible] = useState<boolean>(false);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
+    if (isSolid) return;
     if (latest > 100) {
       setVisible(true);
     } else {
       setVisible(false);
     }
   });
+
+  const effectiveVisible = reduceMotion ? true : isSolid ? true : visible;
 
   return (
     <motion.div
@@ -77,29 +87,34 @@ export const Navbar = ({ children, className }: NavbarProps) => {
     >
       {React.Children.map(children, (child) =>
         React.isValidElement(child)
-          ? React.cloneElement(child as React.ReactElement<{ visible?: boolean }>, {
-              visible: reduceMotion ? true : visible,
-            })
-          : child
+          ? typeof child.type === "string"
+            ? child
+            : React.cloneElement(child as React.ReactElement<{ visible?: boolean; variant?: NavbarVariant }>, {
+                visible: effectiveVisible,
+                variant,
+              })
+          : child,
       )}
     </motion.div>
   );
 };
 
-export const NavBody = ({ children, className, visible }: NavBodyProps) => {
+export const NavBody = ({ children, className, visible, variant = "floating" }: NavBodyProps) => {
   const reduceMotion = useReducedMotion();
+  const isSolid = variant === "solid";
+  const surface = isSolid ? true : !!visible;
   return (
     <motion.div
       animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
-        boxShadow: visible
+        backdropFilter: surface && !isSolid ? "blur(10px)" : "none",
+        boxShadow: surface && !isSolid
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
         width: "100%",
-        y: visible ? 12 : 0,
+        y: isSolid ? 0 : surface ? 12 : 0,
       }}
       transition={{
-        ...(reduceMotion
+        ...(reduceMotion || isSolid
           ? { duration: 0 }
           : {
               type: "spring",
@@ -108,9 +123,12 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
             }),
       }}
       className={cn(
-        "relative z-[60] mx-auto hidden w-full max-w-6xl flex-row items-center justify-between self-start rounded-full border border-transparent bg-transparent px-3 py-2 lg:flex",
-        visible &&
-          "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50",
+        isSolid
+          ? "relative z-[60] mx-auto hidden h-16 w-full max-w-7xl flex-row items-center justify-between self-start bg-transparent px-4 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out"
+          : "relative z-[60] mx-auto hidden w-full max-w-6xl flex-row items-center justify-between self-start rounded-full border border-transparent bg-transparent px-3 py-2 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out",
+        surface && !isSolid
+          ? "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50"
+          : null,
         className,
       )}
     >
@@ -120,54 +138,53 @@ export const NavBody = ({ children, className, visible }: NavBodyProps) => {
 };
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
-  const [hovered, setHovered] = useState<number | null>(null);
+  const activeIndex = items.findIndex((item) => item.active);
+  const [hovered, setHovered] = useState<number | null>(activeIndex >= 0 ? activeIndex : null);
 
   return (
-    <motion.div
-      onMouseLeave={() => setHovered(null)}
+    <div
       className={cn(
-        "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-2 text-sm font-medium text-zinc-600 transition duration-200 hover:text-zinc-800 lg:flex lg:space-x-2",
+        "absolute inset-0 hidden flex-1 flex-row items-center justify-center space-x-6 text-sm font-medium text-foreground/60 transition duration-200 lg:flex lg:space-x-6",
         className,
       )}
     >
       {items.map((item, idx) => (
         <Link
-          onMouseEnter={() => setHovered(idx)}
           onClick={onItemClick}
-          className="relative rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+          aria-current={item.active ? "page" : undefined}
+          className={cn(
+            "relative px-1 py-2 text-sm transition-colors hover:text-foreground/90",
+            item.active ? "text-foreground font-semibold" : "text-muted-foreground",
+          )}
           key={`link-${idx}`}
           href={item.link}
         >
-          {hovered === idx && (
-            <motion.div
-              layoutId="hovered"
-              className="absolute inset-0 h-full w-full rounded-full bg-muted/60"
-            />
-          )}
           <span className="relative z-20">{item.name}</span>
         </Link>
       ))}
-    </motion.div>
+    </div>
   );
 };
 
-export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
+export const MobileNav = ({ children, className, visible, variant = "floating" }: MobileNavProps) => {
   const reduceMotion = useReducedMotion();
+  const isSolid = variant === "solid";
+  const surface = isSolid ? true : !!visible;
   return (
     <motion.div
       animate={{
-        backdropFilter: visible ? "blur(10px)" : "none",
-        boxShadow: visible
+        backdropFilter: surface && !isSolid ? "blur(10px)" : "none",
+        boxShadow: surface && !isSolid
           ? "0 0 24px rgba(34, 42, 53, 0.06), 0 1px 1px rgba(0, 0, 0, 0.05), 0 0 0 1px rgba(34, 42, 53, 0.04), 0 0 4px rgba(34, 42, 53, 0.08), 0 16px 68px rgba(47, 48, 55, 0.05), 0 1px 0 rgba(255, 255, 255, 0.1) inset"
           : "none",
-        width: visible ? "90%" : "100%",
-        paddingRight: visible ? "12px" : "0px",
-        paddingLeft: visible ? "12px" : "0px",
-        borderRadius: visible ? "4px" : "2rem",
-        y: visible ? 12 : 0,
+        width: isSolid ? "100%" : surface ? "90%" : "100%",
+        paddingRight: isSolid ? "0px" : surface ? "12px" : "0px",
+        paddingLeft: isSolid ? "0px" : surface ? "12px" : "0px",
+        borderRadius: isSolid ? "0px" : surface ? "4px" : "2rem",
+        y: isSolid ? 0 : surface ? 12 : 0,
       }}
       transition={{
-        ...(reduceMotion
+        ...(reduceMotion || isSolid
           ? { duration: 0 }
           : {
               type: "spring",
@@ -176,9 +193,12 @@ export const MobileNav = ({ children, className, visible }: MobileNavProps) => {
             }),
       }}
       className={cn(
-        "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between border border-transparent bg-transparent px-0 py-2 lg:hidden",
-        visible &&
-          "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50",
+        isSolid
+          ? "relative z-50 mx-auto flex h-12 w-full max-w-7xl flex-col justify-center bg-transparent px-4 lg:hidden transition-[border-radius,background-color,border-color] duration-200 ease-out"
+          : "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between border border-transparent bg-transparent px-0 py-2 lg:hidden transition-[border-radius,background-color,border-color] duration-200 ease-out",
+        surface && !isSolid
+          ? "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50"
+          : null,
         className,
       )}
     >

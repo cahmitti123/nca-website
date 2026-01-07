@@ -1,6 +1,47 @@
 import { BrandBand } from "@/components/public/brand-band";
 import { BackgroundLines } from "@/components/ui/background-lines";
 import { Eye, Handshake, MessageCircle, Timer } from "lucide-react";
+import type { ComponentType, SVGProps } from "react";
+
+type StatItem = {
+  title: string;
+  description: string;
+  icon: ComponentType<SVGProps<SVGSVGElement>>;
+};
+
+const statItems: readonly StatItem[] = [
+  {
+    title: "Clarté",
+    description: "Des propositions lisibles, des garanties expliquées, et des choix assumés.",
+    icon: Eye,
+  },
+  {
+    title: "Accompagnement",
+    description: "Un interlocuteur pour vous guider et répondre à vos questions.",
+    icon: MessageCircle,
+  },
+  {
+    title: "Efficacité",
+    description: "Un parcours rapide pour obtenir un devis et finaliser votre dossier.",
+    icon: Timer,
+  },
+] as const;
+
+function StatCard({ title, description, icon: Icon }: StatItem) {
+  return (
+    <div className="border-muted/60 bg-background/80 text-foreground backdrop-blur-sm rounded-2xl border p-5 z-30">
+      <div className="flex items-start gap-3">
+        <div className="bg-background text-foreground flex size-9 shrink-0 aspect-square items-center justify-center rounded-md border">
+          <Icon className="size-4 text-primary" aria-hidden="true" />
+        </div>
+        <div className="min-w-0 space-y-1">
+          <div className="text-base font-semibold">{title}</div>
+          <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const Stats = () => {
   return (
@@ -22,52 +63,9 @@ const Stats = () => {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="border-muted/60 bg-background/80 text-foreground backdrop-blur-sm rounded-2xl border p-5 z-30">
-              <div className="flex items-start gap-3">
-                <div className="bg-background text-foreground flex size-9 items-center  justify-center rounded-md border">
-                  <Eye className="size-4 text-primary aspect-square" aria-hidden="true" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-base font-semibold">Clarté</div>
-                  <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                    Des propositions lisibles, des garanties expliquées, et des choix
-                    assumés.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-muted/60 bg-background/80 text-foreground backdrop-blur-sm rounded-2xl border p-5 z-30">
-              <div className="flex items-start gap-3">
-                <div className="bg-background text-foreground flex size-9 items-center justify-center rounded-md border">
-                  <MessageCircle
-                    className="size-4 text-primary"
-                    aria-hidden="true"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-base font-semibold">Accompagnement</div>
-                  <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                    Un interlocuteur pour vous guider et répondre à vos questions.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="border-muted/60 bg-background/80 text-foreground backdrop-blur-sm rounded-2xl border p-5 z-30">
-              <div className="flex items-start gap-3">
-                <div className="bg-background text-foreground flex size-9 items-center justify-center rounded-md border">
-                  <Timer className="size-4 text-primary" aria-hidden="true" />
-                </div>
-                <div className="space-y-1">
-                  <div className="text-base font-semibold">Efficacité</div>
-                  <p className="text-muted-foreground text-sm leading-relaxed sm:text-base">
-                    Un parcours rapide pour obtenir un devis et finaliser votre
-                    dossier.
-                  </p>
-                </div>
-              </div>
-            </div>
+            {statItems.map((item) => (
+              <StatCard key={item.title} {...item} />
+            ))}
           </div>
         </div>
       </BackgroundLines>

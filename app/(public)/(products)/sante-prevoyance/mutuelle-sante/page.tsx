@@ -9,15 +9,12 @@ export const metadata: Metadata = {
     "Trouvez votre mutuelle santé idéale avec Net Courtage Assurances. Découvrez nos formules sur mesure pour protéger votre santé et votre budget.",
 };
 
+import { HeartPulse, Glasses, Baby, Stethoscope } from "lucide-react";
+
 export default function MutuelleSantePage() {
   const product = getInsuranceProduct("mutuelle-sante");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Mutuelle Santé" },
-      ]}
       badges={["Santé", "Sur mesure", "Devis gratuit"]}
       title="Mutuelle Santé"
       description="Chez Net Courtage Assurances, nous vous aidons à trouver une mutuelle santé adaptée à vos besoins et à votre budget. Notre rôle : clarifier vos priorités (soins courants, hospitalisation, dentaire, optique), comparer des solutions pertinentes et vous présenter une proposition lisible, sans superflu."
@@ -30,14 +27,6 @@ export default function MutuelleSantePage() {
         title: "Ce que nous optimisons",
         description:
           "Une bonne mutuelle complète la couverture de base de l’Assurance Maladie en fonction de votre situation. Nous cadrons avec vous les postes qui comptent vraiment, puis on ajuste le niveau de garanties au bon prix.",
-        bullets: [
-          "Soins courants : consultations, pharmacie, analyses.",
-          "Hospitalisation : frais de séjour, honoraires, chambre particulière (selon contrats).",
-          "Dentaire et optique : niveaux, plafonds et conditions de renouvellement.",
-          "Services & confort : tiers payant, réseaux, assistance (selon offres).",
-          "Famille / senior / indépendant : priorités différentes, couverture ajustée.",
-          "Points de vigilance : exclusions, franchises, délais de carence.",
-        ],
       }}
       sideCard={{
         title: "Besoin d’un conseil ?",
@@ -53,6 +42,43 @@ export default function MutuelleSantePage() {
           { label: "Voir la prévoyance", href: "/sante-prevoyance/prevoyance", variant: "outline" },
         ],
       }}
+      features={[
+        {
+          title: "Hospitalisation",
+          description: "La priorité absolue. Nous cherchons les meilleures couvertures pour le forfait journalier et la chambre particulière.",
+          icon: Stethoscope,
+          colSpan: 2,
+        },
+        {
+          title: "Optique & Dentaire",
+          description: "Des forfaits renforcés pour réduire votre reste à charge sur les lunettes, lentilles et prothèses.",
+          icon: Glasses
+        },
+        {
+          title: "Médecines Douces",
+          description: "Ostéopathie, chiropraxie, acupuncture... Des forfaits annuels pour prendre soin de vous autrement.",
+          icon: HeartPulse
+        },
+        {
+          title: "Famille & Enfants",
+          description: "Gratuité à partir du 3ème enfant et lits accompagnants pour l'hospitalisation des plus jeunes.",
+          icon: Baby
+        }
+      ]}
+      faq={[
+        {
+          question: "Qu'est-ce que le '100% Santé' ?",
+          answer: "C'est une réforme qui garantit un reste à charge de 0€ sur une sélection de lunettes, d'aides auditives et de prothèses dentaires. Tous nos contrats responsables l'incluent."
+        },
+        {
+          question: "Y a-t-il un délai de carence ?",
+          answer: "Cela dépend des contrats. Certaines mutuelles prennent en charge vos frais dès le premier jour, d'autres imposent un délai (notamment sur le dentaire ou l'hospitalisation)."
+        },
+        {
+          question: "Puis-je changer de mutuelle en cours d'année ?",
+          answer: "Oui, après un an de contrat, vous pouvez résilier votre mutuelle à tout moment sans frais ni justificatif grâce à la résiliation infra-annuelle."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

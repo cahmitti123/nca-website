@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,17 +12,21 @@ export const metadata: Metadata = {
 
 export default function SeniorsPage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Assurance seniors"
-        description={
-          <>
-            Des solutions de mutuelle santé adaptées aux besoins des seniors : hospitalisation,
-            optique, dentaire et soins courants, selon vos priorités et votre budget.
-          </>
-        }
-      />
-
+    <PortalPage
+      path="/portail/assurances-personnelles/seniors"
+      title="Assurance seniors"
+      description={
+        <>
+          Des solutions de mutuelle santé adaptées aux besoins des seniors : hospitalisation, optique,
+          dentaire et soins courants, selon vos priorités et votre budget.
+        </>
+      }
+      highlights={[
+        "Niveaux de garanties ajustés (hospitalisation, dentaire, optique, soins courants).",
+        "Devis gratuit et accompagnement pour choisir une couverture cohérente.",
+        "Démarrez une demande en ligne si vous avez un besoin précis.",
+      ]}
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         <Card className="border-muted/60">
           <CardHeader className="pb-0">
@@ -54,7 +58,7 @@ export default function SeniorsPage() {
           </CardContent>
         </Card>
       </div>
-    </PageShell>
+    </PortalPage>
   );
 }
 

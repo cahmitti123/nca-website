@@ -9,15 +9,12 @@ export const metadata: Metadata = {
     "Assurance Prévoyance : découvrez nos solutions de prévoyance et d’assurance décès-invalidité, ainsi que nos offres en mutuelle santé.",
 };
 
+import { Umbrella, Hourglass, Heart, Activity } from "lucide-react";
+
 export default function PrevoyancePage() {
   const product = getInsuranceProduct("assurance-prevoyance");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Assurance Prévoyance" },
-      ]}
       badges={["Prévoyance", "Protection", "Devis gratuit"]}
       title="Assurance Prévoyance"
       description="La prévoyance est essentielle pour protéger vos proches en cas d’imprévu. Nous vous aidons à choisir des garanties cohérentes avec votre situation, afin d’anticiper l’impact financier d’un arrêt, d’une invalidité ou d’un décès (selon contrats)."
@@ -30,13 +27,6 @@ export default function PrevoyancePage() {
         title: "Garanties fréquentes",
         description:
           "La prévoyance vise à compléter vos protections existantes. Selon vos besoins, on peut privilégier la protection des revenus, la protection des proches, ou des garanties spécifiques.",
-        bullets: [
-          "Indemnités journalières en cas d’arrêt de travail.",
-          "Rente invalidité selon le niveau de couverture choisi.",
-          "Capital décès pour protéger les proches.",
-          "Options : hospitalisation, accidents de la vie, etc.",
-          "Garanties obsèques (selon offres) pour anticiper les frais.",
-        ],
       }}
       sideCard={{
         title: "À qui s’adresse-t-elle ?",
@@ -45,6 +35,43 @@ export default function PrevoyancePage() {
         bullets: ["Devis gratuit", "Garanties expliquées clairement", "Conseil personnalisé"],
         actions: [{ label: "Demander un devis", href: "/demander-un-devis" }],
       }}
+      features={[
+        {
+          title: "Maintien de Salaire",
+          description: "En cas d'arrêt maladie ou d'accident, nous compensons la perte de revenus pour que vous puissiez continuer à vivre normalement.",
+          icon: Activity,
+          colSpan: 2,
+        },
+        {
+          title: "Capital Décès",
+          description: "Un montant garanti versé à vos bénéficiaires pour faire face aux premières nécessités et couvrir les droits de succession.",
+          icon: Heart
+        },
+        {
+          title: "Rente Invalidité",
+          description: "Une rente mensuelle versée si vous ne pouvez plus exercer votre métier, pour sécuriser votre avenir.",
+          icon: Hourglass
+        },
+        {
+          title: "Accidents de la Vie",
+          description: "Une couverture spécifique pour les accidents domestiques (bricolage, chute) souvent exclus des autres contrats.",
+          icon: Umbrella
+        }
+      ]}
+      faq={[
+        {
+          question: "Est-ce utile si je suis salarié ?",
+          answer: "Oui, car la Sécurité Sociale et votre mutuelle d'entreprise ne couvrent souvent qu'une partie de votre salaire (souvent 50 à 70%). La prévoyance comble ce manque."
+        },
+        {
+          question: "Qu'est-ce que la franchise ?",
+          answer: "C'est le nombre de jours d'arrêt pendant lesquels vous n'êtes pas indemnisé. Pour les indépendants, nous proposons des franchises courtes (3, 15 ou 30 jours)."
+        },
+        {
+          question: "Le capital décès est-il imposable ?",
+          answer: "Non, le capital décès versé aux bénéficiaires désignés est généralement exonéré de droits de succession (selon la législation en vigueur et l'âge à la souscription)."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

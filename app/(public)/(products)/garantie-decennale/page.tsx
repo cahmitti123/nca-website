@@ -9,18 +9,15 @@ export const metadata: Metadata = {
     "Garantie décennale : protégez vos travaux de construction sur le long terme avec une couverture adaptée.",
 };
 
+import { HardHat, Ruler, ShieldAlert, FileCheck } from "lucide-react";
+
 export default function GarantieDecennalePage() {
   const product = getInsuranceProduct("garantie-decennale");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Garantie Décennale" },
-      ]}
       badges={["Construction", "Décennale"]}
       title="Garantie Décennale"
-      description="La garantie décennale est essentielle pour les professionnels du bâtiment. Nous vous accompagnons pour cadrer votre activité, constituer un dossier clair et obtenir une couverture adaptée à vos chantiers (selon conditions)."
+      description="La garantie décennale est essentielle pour les professionnels du bâtiment. Nous vous accompagnons pour cadrer votre activité, constituer un dossier clair et obtenir une couverture adaptée à vos chantiers."
       image={{
         src: product?.illustrationSrc,
         alt: "Garantie décennale",
@@ -29,15 +26,7 @@ export default function GarantieDecennalePage() {
       mainCard={{
         title: "Ce que nous cadrons",
         description:
-          "Chaque activité du bâtiment a ses spécificités. Notre rôle est de qualifier précisément votre périmètre d’intervention et de vous orienter vers une solution cohérente, avec des garanties et exclusions bien comprises.",
-        bullets: [
-          "Votre métier et le périmètre d’activité.",
-          "Le chiffre d’affaires et la zone d’intervention.",
-          "Les garanties et exclusions, selon vos chantiers.",
-          "La mise en conformité des justificatifs.",
-          "La nature des travaux (second œuvre / gros œuvre, selon cas).",
-          "Antécédents, sinistralité, et organisation (sous-traitance, etc.).",
-        ],
+          "Chaque activité du bâtiment a ses spécificités. Notre rôle est de qualifier précisément votre périmètre d’intervention et de vous orienter vers une solution cohérente.",
       }}
       sideCard={{
         title: "Demande rapide",
@@ -46,6 +35,43 @@ export default function GarantieDecennalePage() {
         bullets: ["Devis gratuit", "Dossier cadré", "Réponse rapide"],
         actions: [{ label: "Demander un devis", href: "/demander-un-devis" }],
       }}
+      features={[
+        {
+          title: "Couverture 10 Ans",
+          description: "Protège vos ouvrages pendant 10 ans après la réception des travaux. Obligatoire et serein.",
+          icon: ShieldAlert,
+          colSpan: 2,
+        },
+        {
+          title: "Activités Ciblées",
+          description: "Maçonnerie, plomberie, électricité... Nous adaptons le contrat à votre corps de métier exact.",
+          icon: HardHat
+        },
+        {
+          title: "Protection Juridique",
+          description: "En cas de litige avec un client ou un fournisseur, vos frais de justice sont couverts (selon option).",
+          icon: Ruler
+        },
+        {
+          title: "Attestation Rapide",
+          description: "Obtenez votre attestation décennale rapidement pour pouvoir commencer vos chantiers sans attendre.",
+          icon: FileCheck
+        }
+      ]}
+      faq={[
+        {
+          question: "L'assurance décennale est-elle obligatoire ?",
+          answer: "OUI. Tout constructeur (artisan, entrepreneur, promoteur...) doit souscrire une assurance décennale avant l'ouverture du chantier."
+        },
+        {
+          question: "Les sous-traitants sont-ils concernés ?",
+          answer: "Le sous-traitant n'a pas d'obligation légale de décennale envers le maître d'ouvrage, mais il est responsable vis-à-vis de l'entreprise qui l'emploie. Il est donc vivement conseillé d'être assuré."
+        },
+        {
+          question: "Que couvre exactement la garantie ?",
+          answer: "Elle couvre les dommages qui compromettent la solidité de l'ouvrage ou qui le rendent impropre à sa destination."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

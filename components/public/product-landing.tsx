@@ -1,6 +1,8 @@
 import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { type LucideIcon, HelpCircle } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -29,6 +31,18 @@ export type ProductLandingBreadcrumb = {
   href?: string;
 };
 
+export type BentoFeature = {
+  title: string;
+  description: string;
+  icon?: LucideIcon;
+  colSpan?: 1 | 2;
+};
+
+export type FAQItem = {
+  question: string;
+  answer: string;
+};
+
 export type ProductLandingProps = {
   breadcrumbs?: ProductLandingBreadcrumb[];
   badges?: string[];
@@ -46,6 +60,9 @@ export type ProductLandingProps = {
   mainCard: ProductLandingCard;
   sideCard?: ProductLandingCard;
   extra?: React.ReactNode;
+  // New Props for Radical Layout
+  features?: BentoFeature[];
+  faq?: FAQItem[];
 };
 
 function ActionButton({ action, className }: { action: ProductLandingAction; className?: string }) {
@@ -80,6 +97,8 @@ export async function ProductLanding({
   mainCard,
   sideCard,
   extra,
+  features,
+  faq,
 }: ProductLandingProps) {
   const imageUrl = image
     ? image.src
@@ -95,148 +114,229 @@ export async function ProductLanding({
     : null;
 
   return (
-    <div className="space-y-10">
-      <div className="grid items-start gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-        <div className="space-y-4">
+    <div className="space-y-16 lg:space-y-24">
+      {/* 1. Immersive Hero Section */}
+      <div className="grid items-center gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-16">
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
           {breadcrumbs?.length ? (
-            <nav className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
+            <nav className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs uppercase tracking-wider font-medium opacity-80">
               {breadcrumbs.map((c, idx) => {
-                const isLast = idx === breadcrumbs.length - 1;
+                const isLast = idx === (breadcrumbs.length || 0) - 1;
                 return (
                   <React.Fragment key={`${c.label}-${c.href ?? idx}`}>
                     {c.href && !isLast ? (
-                      <Link className="hover:text-foreground transition-colors" href={c.href}>
+                      <Link className="hover:text-primary transition-colors" href={c.href}>
                         {c.label}
                       </Link>
                     ) : (
                       <span className={isLast ? "text-foreground" : undefined}>{c.label}</span>
                     )}
-                    {!isLast ? <span aria-hidden="true">/</span> : null}
+                    {!isLast ? <span aria-hidden="true" className="text-border">/</span> : null}
                   </React.Fragment>
                 );
               })}
             </nav>
           ) : null}
 
-          {badges.length ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="border-primary/15 bg-primary/10 text-primary inline-flex items-center gap-2 rounded-full border px-3 py-1">
-                <span aria-hidden="true" className="bg-primary size-2 rounded-full animate-pulse" />
-                <span className="text-[11px] font-semibold uppercase tracking-wide">{badges[0]}</span>
+          <div className="space-y-6">
+            {badges.length ? (
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="border-primary/20 bg-primary/5 text-primary inline-flex items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm">
+                  <span aria-hidden="true" className="bg-primary size-2 rounded-full animate-pulse" />
+                  <span className="text-[11px] font-bold uppercase tracking-wider">{badges[0]}</span>
+                </div>
+                {badges.slice(1).map((b) => (
+                  <Badge key={b} variant="outline" className="bg-background/80 backdrop-blur-sm border-border/60">
+                    {b}
+                  </Badge>
+                ))}
               </div>
-              {badges.slice(1).map((b) => (
-                <Badge key={b} variant="outline" className="bg-background/60">
-                  {b}
-                </Badge>
-              ))}
-            </div>
-          ) : null}
+            ) : null}
 
-          <div className="space-y-2">
-            <h1 className="font-heading text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <h1 className="font-heading text-balance text-5xl font-extrabold tracking-tight sm:text-6xl text-foreground leading-[1.1]">
               {title}
             </h1>
-            <p className="text-muted-foreground max-w-prose text-sm leading-relaxed sm:text-base">
+            <p className="text-muted-foreground max-w-prose text-lg leading-relaxed sm:text-xl">
               {description}
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-            <ActionButton action={primaryAction} />
-            <ActionButton action={secondaryAction} />
-            {tertiaryAction ? <ActionButton action={tertiaryAction} /> : null}
+          <div className="flex flex-col gap-4 sm:flex-row sm:flex-wrap pt-4">
+            {primaryAction && <ActionButton action={{ ...primaryAction, variant: "default" }} className="h-12 px-8 text-base shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300" />}
+            {secondaryAction && <ActionButton action={{ ...secondaryAction, variant: "outline" }} className="h-12 px-8 text-base bg-background/50 backdrop-blur border-border/60 hover:bg-background/80" />}
+            {tertiaryAction && <ActionButton action={tertiaryAction} className="h-12" />}
           </div>
         </div>
 
         {image ? (
-          <div className="w-full lg:flex lg:justify-end">
-            <div className="relative aspect-16/10 w-full overflow-hidden rounded-3xl lg:max-w-xl">
+          <div className="w-full lg:flex lg:justify-end animate-in fade-in zoom-in-95 duration-1000 delay-200">
+            <div className="relative aspect-square lg:aspect-[4/5] w-full max-w-lg overflow-hidden rounded-[2.5rem] bg-gradient-to-b from-muted/30 to-muted/10 ring-1 ring-border/50 shadow-2xl group mx-auto">
+               <div className="absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-transparent opacity-50" />
               <Image
                 src={imageUrl ?? image.fallbackSrc ?? "/hero-placeholder.svg"}
                 alt={image.alt}
                 fill
-                priority={false}
+                priority={true}
                 sizes="(min-width: 1024px) 40vw, 100vw"
-                className={image.src ? "object-contain" : "object-cover"}
+                className={cn(
+                  image.src ? "object-contain p-12 drop-shadow-2xl" : "object-cover",
+                  "transition-transform duration-700 ease-out group-hover:scale-105"
+                )}
               />
             </div>
           </div>
         ) : null}
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
-        <Card className="border-muted/60 lg:col-span-2">
-          <CardHeader className="pb-0">
-            <CardTitle className="text-base">{mainCard.title}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4 pt-4">
-            {mainCard.description ? (
-              <p className="text-muted-foreground text-sm leading-relaxed">{mainCard.description}</p>
-            ) : null}
-            {mainCard.bullets?.length ? <BulletList items={mainCard.bullets} /> : null}
-            {mainCard.actions?.length ? (
-              <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap">
-                {mainCard.actions.map((a) => (
-                  <ActionButton
-                    key={`${a.href}-${a.label}`}
-                    action={{ ...a, variant: a.variant ?? "outline" }}
-                    className="h-9 px-3 text-sm"
-                  />
-                ))}
-              </div>
-            ) : null}
-          </CardContent>
-        </Card>
-
-        {sideCard ? (
-          <Card
-            className={cn(
-              "border-muted/60 lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-hidden",
-              sideCard.actions?.length ? "" : "",
-            )}
-          >
-            <CardHeader className="pb-0">
-              <CardTitle className="text-base">{sideCard.title}</CardTitle>
-            </CardHeader>
-            <CardContent className="flex min-h-0 flex-1 flex-col gap-4 pt-4">
-              <div className="min-h-0 flex-1 overflow-y-auto pr-2 [scrollbar-gutter:stable]">
-                <div className="space-y-4">
-                  {sideCard.description ? (
-                    <p className="text-muted-foreground text-sm leading-relaxed">
-                      {sideCard.description}
-                    </p>
-                  ) : null}
-                  {sideCard.bullets?.length ? <BulletList items={sideCard.bullets} /> : null}
-                </div>
-              </div>
-
-              {sideCard.actions?.length ? (
-                <div className="border-border/60 border-t pt-3">
-                  <div className="grid gap-2">
-                    {sideCard.actions.map((a) => (
-                      <Button
-                        key={`${a.href}-${a.label}`}
-                        size="sm"
-                        variant={a.variant ?? "outline"}
-                        className="w-full"
-                        asChild
-                      >
-                        {a.href.startsWith("tel:") || a.href.startsWith("mailto:") ? (
-                          <a href={a.href}>{a.label}</a>
-                        ) : (
-                          <Link href={a.href}>{a.label}</Link>
-                        )}
-                      </Button>
+      <div className="grid gap-8 lg:grid-cols-[1fr_20rem] lg:gap-16">
+         <div className="space-y-16">
+           {/* 2. Bento Features (or Standard Card) */}
+            {features?.length ? (
+              <section className="space-y-6">
+                 <div className="space-y-2">
+                   <h2 className="text-2xl font-bold tracking-tight">Ce que nous couvrons</h2>
+                   <p className="text-muted-foreground text-lg">{mainCard.description}</p>
+                 </div>
+                 <div className="grid gap-4 sm:grid-cols-2">
+                    {features.map((feature, i) => (
+                      <Card key={i} className={cn("border-muted/60 bg-card/50 hover:bg-card hover:border-primary/20 transition-all duration-300", feature.colSpan === 2 ? "sm:col-span-2" : "")}>
+                         <CardHeader className="pb-3">
+                           {feature.icon ? (
+                             <div className="size-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-3">
+                               <feature.icon className="size-5" />
+                             </div>
+                           ) : null}
+                           <CardTitle className="text-lg">{feature.title}</CardTitle>
+                         </CardHeader>
+                         <CardContent>
+                            <p className="text-muted-foreground text-sm leading-relaxed">{feature.description}</p>
+                         </CardContent>
+                      </Card>
                     ))}
-                  </div>
-                </div>
-              ) : null}
-            </CardContent>
-          </Card>
-        ) : null}
-      </div>
+                 </div>
+              </section>
+            ) : (
+             <Card className="border-muted/60 shadow-sm">
+                <CardHeader className="pb-4 border-b border-border/40 bg-muted/10">
+                  <CardTitle className="text-xl">{mainCard.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6 pt-6">
+                  {mainCard.description ? (
+                    <p className="text-muted-foreground text-sm leading-relaxed">{mainCard.description}</p>
+                  ) : null}
+                  
+                  {mainCard.bullets?.length ? (
+                    <div className="rounded-xl border border-border/50 bg-muted/20 p-6">
+                      <BulletList items={mainCard.bullets} columns={2} />
+                    </div>
+                  ) : null}
 
-      {extra ? <div className="pt-2">{extra}</div> : null}
+                  {mainCard.actions?.length ? (
+                    <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap pt-2">
+                      {mainCard.actions.map((a) => (
+                        <ActionButton
+                          key={`${a.href}-${a.label}`}
+                          action={{ ...a, variant: a.variant ?? "outline" }}
+                          className="h-9 px-4 text-sm"
+                        />
+                      ))}
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            )}
+
+            {/* 3. Detailed Prose Content */}
+            {extra ? (
+              <div className="rich-content prose prose-gray dark:prose-invert max-w-none pt-4">
+                 {extra}
+              </div>
+            ) : null}
+
+             {/* 4. FAQ Section */}
+             {faq?.length ? (
+               <section className="space-y-6 pt-8 border-t border-border/40">
+                 <div className="flex items-center gap-3">
+                   <div className="bg-primary/10 p-2 rounded-full text-primary"><HelpCircle className="size-5" /></div>
+                   <h2 className="text-2xl font-bold tracking-tight">Questions fréquentes</h2>
+                 </div>
+                 <Accordion type="single" collapsible className="w-full">
+                    {faq.map((item, i) => (
+                      <AccordionItem key={i} value={`item-${i}`}>
+                        <AccordionTrigger className="text-left font-medium">{item.question}</AccordionTrigger>
+                        <AccordionContent className="text-muted-foreground leading-relaxed">
+                          {item.answer}
+                        </AccordionContent>
+                      </AccordionItem>
+                    ))}
+                 </Accordion>
+               </section>
+             ) : null}
+         </div>
+
+         {/* 5. Sticky Side Card */}
+         <aside className="space-y-8">
+            {sideCard ? (
+              <Card
+                className={cn(
+                  "border-muted/60 lg:sticky lg:top-28 lg:self-start shadow-xl shadow-primary/5 bg-background/80 backdrop-blur-md overflow-hidden",
+                )}
+              >
+                <div className="h-2 bg-gradient-to-r from-primary to-primary/60" />
+                <CardHeader className="pb-4">
+                  <div className="text-xs font-bold uppercase tracking-wider text-primary mb-1">Notre conseil</div>
+                  <CardTitle className="text-xl">{sideCard.title}</CardTitle>
+                </CardHeader>
+                <CardContent className="flex flex-col gap-6 pt-2">
+                  <div className="space-y-4">
+                    {sideCard.description ? (
+                      <p className="text-muted-foreground text-sm leading-relaxed">
+                        {sideCard.description}
+                      </p>
+                    ) : null}
+                    {sideCard.bullets?.length ? <BulletList items={sideCard.bullets} /> : null}
+                  </div>
+
+                  {sideCard.actions?.length ? (
+                    <div className="grid gap-3 pt-2">
+                      {sideCard.actions.map((a) => (
+                        <Button
+                          key={`${a.href}-${a.label}`}
+                          size="lg"
+                          variant={a.variant ?? "default"}
+                          className="w-full shadow-md font-semibold"
+                          asChild
+                        >
+                          {a.href.startsWith("tel:") || a.href.startsWith("mailto:") ? (
+                            <a href={a.href}>{a.label}</a>
+                          ) : (
+                            <Link href={a.href}>{a.label}</Link>
+                          )}
+                        </Button>
+                      ))}
+                    </div>
+                  ) : null}
+                </CardContent>
+              </Card>
+            ) : null}
+            
+            {/* Trust Signals in Sidebar */}
+            <div className="bg-muted/30 rounded-2xl p-6 border border-border/50 space-y-4 lg:sticky lg:top-[30rem]">
+                <h4 className="font-semibold text-sm">Pourquoi nous ?</h4>
+                <ul className="space-y-3 text-sm text-muted-foreground">
+                   <li className="flex gap-2">
+                      <span className="text-primary">✓</span> Comparaison objective
+                   </li>
+                   <li className="flex gap-2">
+                      <span className="text-primary">✓</span> Courtier local (77)
+                   </li>
+                   <li className="flex gap-2">
+                      <span className="text-primary">✓</span> Service sinistre dédié
+                   </li>
+                </ul>
+            </div>
+         </aside>
+      </div>
     </div>
   );
 }

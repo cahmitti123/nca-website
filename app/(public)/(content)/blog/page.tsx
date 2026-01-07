@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { getPexelsImageUrls } from "@/lib/pexels";
 import {
   pexelsBlogQueryForSlug,
@@ -154,184 +155,175 @@ export default async function PublicBlogPage({
   });
 
   return (
-    <PageShell className="space-y-10">
-      <div className="border-muted/60 bg-primary/5 relative overflow-hidden rounded-3xl border p-6 sm:p-10">
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,oklch(var(--primary)/0.16),transparent_58%)]"
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 opacity-[0.14] [background-image:radial-gradient(oklch(var(--primary)/0.22)_0.8px,transparent_0.8px)] bg-size-[24px_24px]"
-        />
-
-        <div className="relative z-10 mx-auto max-w-2xl space-y-4 text-center">
-          <div className="ring-border/60 bg-background/70 mx-auto flex size-12 items-center justify-center rounded-full ring-1">
-            <Newspaper className="text-primary size-5" aria-hidden="true" />
-          </div>
-          <div className="space-y-2">
-            <h1 className="font-heading text-balance text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Derniers articles
+    <PageShell className="space-y-12 pb-20">
+      {/* Header Section */}
+      <section className="relative overflow-hidden rounded-[2rem] bg-primary/5 px-6 py-12 sm:px-12 sm:py-20">
+         <div className="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-25" />
+         <div className="relative mx-auto max-w-2xl text-center space-y-6">
+            <h1 className="font-heading text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
+              Le Blog <span className="text-primary">NCA</span>
             </h1>
-            <p className="text-muted-foreground text-pretty text-sm leading-relaxed sm:text-base">
-              Conseils, actualités et guides pour mieux comprendre vos assurances et faire les bons
-              choix.
+            <p className="text-muted-foreground text-lg sm:text-xl">
+              Décrypter l&apos;assurance pour vous aider à protéger ce qui compte.
             </p>
-          </div>
+             <div className="bg-background/80 backdrop-blur-sm border border-border/50 mx-auto flex max-w-md items-center gap-3 rounded-full px-4 py-2.5 shadow-sm transition-all focus-within:ring-2 focus-within:ring-primary/20">
+                <Search className="text-muted-foreground size-5" />
+                <Input
+                  placeholder="Rechercher un article..."
+                  className="border-0 bg-transparent p-0 text-base shadow-none placeholder:text-muted-foreground/70 focus-visible:ring-0"
+                  disabled
+                />
+             </div>
+         </div>
+      </section>
 
-          <div className="bg-background/70 border-muted/60 mx-auto flex max-w-xl items-center gap-2 rounded-full border px-4 py-2">
-            <Search className="text-muted-foreground size-4" aria-hidden="true" />
-            <Input
-              aria-label="Rechercher un article"
-              placeholder="Rechercher un article…"
-              className="border-0 bg-transparent px-0 shadow-none focus-visible:ring-0"
-              disabled
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap justify-center gap-2">
+      {/* Filter Tabs */}
+      <div className="flex flex-wrap justify-center gap-3">
         <Button
           size="sm"
-          variant={selectedTopic === "all" ? "default" : "outline"}
-          className="rounded-full"
+          variant={selectedTopic === "all" ? "default" : "secondary"}
+          className="rounded-full px-6 font-medium"
           asChild
         >
-          <Link href={blogHref({ topic: "all" })}>Tout voir</Link>
+          <Link href={blogHref({ topic: "all" })}>Tous</Link>
         </Button>
-        {TOPIC_DEFS.filter((t) => (topicCounts.get(t.key) ?? 0) > 0).map((t) => (
-          <Button
-            key={t.key}
-            size="sm"
-            variant={selectedTopic === t.key ? "default" : "outline"}
-            className="rounded-full"
-            asChild
-          >
-            <Link href={blogHref({ topic: t.key })}>{t.label}</Link>
-          </Button>
+        {TOPIC_DEFS.map((t) => (
+           <Button
+             key={t.key}
+             size="sm"
+             variant={selectedTopic === t.key ? "default" : "outline"}
+             className={cn("rounded-full border-border/50", selectedTopic === t.key ? "" : "bg-transparent hover:bg-muted/50")}
+             asChild
+           >
+             <Link href={blogHref({ topic: t.key })}>{t.label}</Link>
+           </Button>
         ))}
       </div>
 
-      {posts.length === 0 ? (
-        <Card className="border-muted/60">
-          <CardContent className="text-muted-foreground py-6 text-sm">
-            Aucun article publié pour le moment.
-          </CardContent>
-        </Card>
+      {/* Content Grid */}
+      {pagePosts.length === 0 ? (
+        <div className="flex min-h-[400px] flex-col items-center justify-center rounded-3xl border border-dashed text-center">
+            <div className="flex size-16 items-center justify-center rounded-full bg-muted/50">
+               <Newspaper className="size-8 text-muted-foreground/50" />
+            </div>
+            <h3 className="mt-4 text-xl font-semibold">Aucun article trouvé</h3>
+            <p className="text-muted-foreground mt-2 max-w-sm">Revenez bientôt pour découvrir nos nouveaux contenus.</p>
+        </div>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {pagePosts.map((p, idx) => {
-            const coverSrc = coverUrls[idx];
-            const topicLabel =
-              TOPIC_DEFS.find((t) => t.key === p.topic)?.label ?? "Conseils";
-            return (
-              <Card key={p.id} className="group border-muted/60 overflow-hidden py-0">
-                <Link href={`/blog/${p.slug}`} className="block">
-                  <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                    {coverSrc ? (
-                      <Image
-                        src={coverSrc}
-                        alt={`Illustration : ${p.title}`}
-                        fill
-                        sizes="(min-width: 1024px) 33vw, 100vw"
-                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-gradient-to-br from-muted to-muted/50" />
-                    )}
-                    <div className="absolute left-3 top-3">
-                      <Badge className="bg-background/90 text-primary hover:bg-background/90">
-                        {topicLabel}
-                      </Badge>
-                    </div>
-                    <div
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/25 via-transparent to-transparent"
-                    />
-                  </div>
-                </Link>
+        <div className="grid gap-8 space-y-8">
+           {/* Hero Post (First item of first page) */}
+           {currentPage === 1 && pagePosts[0] && (
+               <Link href={`/blog/${pagePosts[0].slug}`} className="group relative isolate flex flex-col justify-end overflow-hidden rounded-[2rem] bg-gray-900 px-8 pb-8 pt-80 sm:px-12 sm:pb-12 lg:pt-96 transition-all hover:shadow-2xl hover:shadow-primary/20 hover:-translate-y-1">
+                  <Image
+                     src={coverUrls[0] || ""}
+                     alt={pagePosts[0].title}
+                     fill
+                     className="absolute inset-0 -z-10 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-60"
+                  />
+                  <div className="absolute inset-0 -z-10 bg-gradient-to-t from-gray-900 via-gray-900/40" />
+                  <div className="absolute inset-0 -z-10 rounded-[2rem] ring-1 ring-inset ring-gray-900/10" />
 
-                <CardHeader className="pb-0 pt-4">
-                  <CardTitle className="font-heading text-lg leading-snug">
-                    <Link
-                      href={`/blog/${p.slug}`}
-                      className="hover:text-primary transition-colors"
-                    >
-                      {p.title}
+                  <div className="flex flex-wrap items-center gap-y-1 overflow-hidden text-sm leading-6 text-gray-300">
+                    <time dateTime={(pagePosts[0].publishedAt ?? pagePosts[0].updatedAt).toISOString()} className="mr-8">
+                      {(pagePosts[0].publishedAt ?? pagePosts[0].updatedAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                    </time>
+                    <div className="-ml-4 flex items-center gap-x-4">
+                      <svg viewBox="0 0 2 2" className="-ml-0.5 h-0.5 w-0.5 flex-none fill-white/50">
+                        <circle cx={1} cy={1} r={1} />
+                      </svg>
+                      <div className="flex gap-x-2.5">
+                        <span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary-foreground ring-1 ring-inset ring-primary/20">
+                           {TOPIC_DEFS.find(t => t.key === pagePosts[0]?.topic)?.label}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className="mt-3 text-2xl font-bold leading-tight text-white sm:text-4xl lg:text-5xl group-hover:text-primary transition-colors">
+                    {pagePosts[0].title}
+                  </h3>
+                  <p className="mt-4 max-w-xl text-lg text-gray-300 line-clamp-2">
+                     {pagePosts[0].excerpt}
+                  </p>
+               </Link>
+           )}
+
+           {/* Remaining Posts Grid */}
+           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+              {(currentPage === 1 ? pagePosts.slice(1) : pagePosts).map((post, idx) => {
+                 // Adjust index because we skipped 0 if page 1
+                 const realIdx = currentPage === 1 ? idx + 1 : idx;
+                 const cover = coverUrls[realIdx];
+                 const topicLabel = TOPIC_DEFS.find((t) => t.key === post.topic)?.label ?? "Conseils";
+                 
+                 return (
+                    <Link key={post.id} href={`/blog/${post.slug}`} className="group flex flex-col items-start justify-between rounded-2xl bg-card transition-all hover:-translate-y-1 hover:shadow-lg ring-1 ring-border/50 hover:ring-primary/20">
+                       <div className="relative w-full aspect-[16/10] overflow-hidden rounded-t-2xl bg-muted">
+                          <Image
+                             src={cover || ""}
+                             alt={post.title}
+                             fill
+                             className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute top-4 left-4">
+                             <span className="inline-flex items-center rounded-md bg-background/90 backdrop-blur px-2.5 py-1 text-xs font-semibold text-foreground shadow-sm">
+                                {topicLabel}
+                             </span>
+                          </div>
+                       </div>
+                       <div className="flex flex-1 flex-col p-6">
+                          <div className="flex items-center gap-x-4 text-xs text-muted-foreground mb-3">
+                             <time dateTime={(post.publishedAt ?? post.updatedAt).toISOString()}>
+                               {(post.publishedAt ?? post.updatedAt).toLocaleDateString("fr-FR", { month: "short", day: "numeric", year: "numeric" })}
+                             </time>
+                             <span className="text-primary/10">&bull;</span>
+                             <span>5 min de lecture</span>
+                          </div>
+                          <h3 className="font-heading text-xl font-semibold leading-snug group-hover:text-primary transition-colors mb-3">
+                            {post.title}
+                          </h3>
+                          <p className="mt-auto line-clamp-3 text-sm leading-relaxed text-muted-foreground">
+                            {post.excerpt}
+                          </p>
+                          <div className="mt-6 flex items-center font-medium text-primary text-sm group-hover:underline decoration-2 underline-offset-4">
+                             Lire l&apos;article <ChevronRight className="ml-1 size-4" />
+                          </div>
+                       </div>
                     </Link>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4 pt-4">
-                  <div className="text-muted-foreground text-xs">
-                    {(p.publishedAt ?? p.updatedAt).toISOString().slice(0, 10)}
-                  </div>
-                  {p.excerpt ? (
-                    <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                      {p.excerpt}
-                    </p>
-                  ) : null}
-                  <div className="border-border/60 flex items-center justify-between border-t pt-3">
-                    <Button size="sm" variant="link" className="px-0" asChild>
-                      <Link href={`/blog/${p.slug}`}>Lire l’article</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                 )
+              })}
+           </div>
         </div>
       )}
 
-      {posts.length > 0 && totalPages > 1 ? (
-        <nav className="flex items-center justify-center gap-2">
-          <Button
-            variant="outline"
-            size="icon-sm"
-            className="rounded-full"
-            disabled={currentPage <= 1}
-            asChild
-          >
-            <Link
-              href={blogHref({ topic: selectedTopic, page: Math.max(1, currentPage - 1) })}
-              aria-label="Page précédente"
-            >
-              <ChevronLeft className="size-4" aria-hidden="true" />
-            </Link>
-          </Button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1)
-            .slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2))
-            .map((n) => (
-              <Button
-                key={n}
-                variant={n === currentPage ? "default" : "outline"}
-                size="icon-sm"
-                className="rounded-full"
+      {/* Pagination (Keep existing logic but style it better) */}
+      {posts.length > 0 && totalPages > 1 && (
+        <nav className="flex items-center justify-center gap-4 pt-12">
+            {/* Same pagination logic, just ensure button styles match */}
+            <Button
+                variant="ghost"
+                size="icon"
+                disabled={currentPage <= 1}
                 asChild
-              >
-                <Link href={blogHref({ topic: selectedTopic, page: n })} aria-label={`Page ${n}`}>
-                  {n}
-                </Link>
-              </Button>
-            ))}
-
-          <Button
-            variant="outline"
-            size="icon-sm"
-            className="rounded-full"
-            disabled={currentPage >= totalPages}
-            asChild
-          >
-            <Link
-              href={blogHref({ topic: selectedTopic, page: Math.min(totalPages, currentPage + 1) })}
-              aria-label="Page suivante"
             >
-              <ChevronRight className="size-4" aria-hidden="true" />
-            </Link>
-          </Button>
+                <Link href={blogHref({ topic: selectedTopic, page: Math.max(1, currentPage - 1) })}>
+                   <ChevronLeft className="size-5" />
+                </Link>
+            </Button>
+            <span className="text-sm font-medium text-muted-foreground">
+                Page {currentPage} sur {totalPages}
+            </span>
+            <Button
+                variant="ghost"
+                size="icon"
+                disabled={currentPage >= totalPages}
+                asChild
+            >
+                <Link href={blogHref({ topic: selectedTopic, page: Math.min(totalPages, currentPage + 1) })}>
+                   <ChevronRight className="size-5" />
+                </Link>
+            </Button>
         </nav>
-      ) : null}
+      )}
     </PageShell>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -12,12 +12,16 @@ export const metadata: Metadata = {
 
 export default function PortailEmprunteurPage() {
   return (
-    <PageShell>
-      <PageIntro
-        title="Assurances emprunteur"
-        description="Pour une présentation complète, consultez notre page assurance emprunteur."
-      />
-
+    <PortalPage
+      path="/portail/assurances-personnelles/emprunteur"
+      title="Assurances emprunteur"
+      description="Pour une présentation complète, consultez notre page assurance emprunteur."
+      highlights={[
+        "Protection du crédit immobilier : décès, invalidité, incapacité (selon contrats).",
+        "Points à vérifier : exclusions, quotité, délais de carence/prise d’effet.",
+        "Accédez à la page détaillée et demandez un devis si nécessaire.",
+      ]}
+    >
       <Card className="border-muted/60">
         <CardHeader className="pb-0">
           <CardTitle className="text-base">Assurance Emprunteur</CardTitle>
@@ -36,7 +40,7 @@ export default function PortailEmprunteurPage() {
           </div>
         </CardContent>
       </Card>
-    </PageShell>
+    </PortalPage>
   );
 }
 

@@ -9,18 +9,15 @@ export const metadata: Metadata = {
     "Protégez votre investissement immobilier avec notre assurance emprunteur. Découvrez nos offres compétitives pour une protection personnalisée.",
 };
 
+import { Home, PiggyBank, RefreshCw, FileText } from "lucide-react";
+
 export default function AssuranceEmprunteurPage() {
   const product = getInsuranceProduct("assurance-emprunteur");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Assurance Emprunteur" },
-      ]}
       badges={["Crédit immobilier", "Protection"]}
       title="Assurance Emprunteur"
-      description="Net Courtage Assurances vous propose une assurance emprunteur adaptée à vos besoins et à votre budget. L’objectif : protéger votre investissement et sécuriser votre projet immobilier en cas d’aléas (selon garanties), avec un contrat compréhensible et aligné sur votre situation."
+      description="Net Courtage Assurances vous propose une assurance emprunteur adaptée à vos besoins et à votre budget. L’objectif : protéger votre investissement et sécuriser votre projet immobilier en cas d’aléas, avec un contrat compréhensible et aligné sur votre situation."
       image={{
         src: product?.illustrationSrc,
         alt: "Assurance emprunteur",
@@ -30,13 +27,6 @@ export default function AssuranceEmprunteurPage() {
         title: "Points clés",
         description:
           "L’achat d’un bien immobilier est un engagement important. Une assurance de prêt bien cadrée vise à protéger l’emprunteur et ses proches en cas d’événements de vie impactant la capacité de remboursement.",
-        bullets: [
-          "Garanties : décès, PTIA, ITT, IPT (selon les contrats).",
-          "Choix du niveau de couverture et des quotités.",
-          "Analyse de votre situation (âge, profession, projet, antécédents).",
-          "Lecture des exclusions, délais et conditions de mise en jeu.",
-          "Accompagnement pour comprendre le contrat avant signature.",
-        ],
       }}
       sideCard={{
         title: "Notre approche",
@@ -45,6 +35,43 @@ export default function AssuranceEmprunteurPage() {
         bullets: ["Devis gratuit et personnalisé", "Conseil sur mesure", "Accompagnement en cas de sinistre"],
         actions: [{ label: "Demander un devis", href: "/demander-un-devis" }],
       }}
+      features={[
+        {
+          title: "Économies Massives",
+          description: "La délégation d'assurance permet souvent d'économiser des milliers d'euros par rapport à l'offre de votre banque, à garanties équivalentes.",
+          icon: PiggyBank,
+          colSpan: 2,
+        },
+        {
+          title: "Loi Lemoine",
+          description: "Vous pouvez désormais changer d'assurance de prêt à tout moment, sans frais ni pénalité. Nous gérons tout.",
+          icon: RefreshCw
+        },
+        {
+          title: "Formalités Simplifiées",
+          description: "Dans de nombreux cas, plus besoin de questionnaire de santé (sous conditions de montant et d'âge).",
+          icon: FileText
+        },
+        {
+          title: "Garanties Pertinentes",
+          description: "Décès, PTIA, IPT, ITT... Nous vous expliquons chaque acronyme pour que vous sachiez exactement ce que vous signez.",
+          icon: Home
+        }
+      ]}
+      faq={[
+        {
+          question: "La banque peut-elle refuser mon assurance externe ?",
+          answer: "Non, si les garanties sont au moins équivalentes à celles qu'elle propose. Nous nous assurons de cette équivalence pour garantir l'acceptation."
+        },
+        {
+          question: "Faut-il refaire tous les examens médicaux ?",
+          answer: "Pas forcément ! Avec la Loi Lemoine, le questionnaire de santé est supprimé pour les prêts immobiliers de moins de 200 000 € (par assuré) dont le terme intervient avant 60 ans."
+        },
+        {
+          question: "Quand puis-je changer d'assurance ?",
+          answer: "À TOUT MOMENT. Depuis 2022, la résiliation est possible n'importe quand. N'attendez plus pour économiser."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

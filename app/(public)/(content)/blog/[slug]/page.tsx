@@ -5,10 +5,8 @@ import Image from "next/image";
 
 import { db } from "@/db";
 import { blogPosts } from "@/db/schema";
-import { CtaBand } from "@/components/cta-band";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getPexelsImageUrl } from "@/lib/pexels";
 import {
   pexelsBlogQueryForSlug,
@@ -16,7 +14,8 @@ import {
   PEXELS_DEFAULT_REVALIDATE_SECONDS,
 } from "@/lib/stock-images";
 import { and, desc, eq } from "drizzle-orm";
-import { CalendarDays, Clock, Newspaper } from "lucide-react";
+import { CalendarDays, Clock, Newspaper, ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 type Params = { slug: string };
 
@@ -191,154 +190,190 @@ export default async function BlogPostPage({
     }),
   );
 
+  // Extract headers for ToC
+  const headers = Array.from(post.contentHtml.matchAll(/<h([2-3])[^>]*>(.*?)<\/h\1>/g)).map((match, index) => {
+     const id = `heading-${index}`;
+     // We need to inject IDs into the HTML to make anchors work.
+     // This is a simple replace strategy suitable for this demo.
+     return {
+        id,
+        level: Number(match[1]),
+        text: match[2].replace(/<[^>]*>/g, ""), // strip inner HTML if any
+        originalMatch: match[0]
+     };
+  });
+  
+  // Inject IDs into content
+  let processedHtml = post.contentHtml;
+  headers.forEach(h => {
+      processedHtml = processedHtml.replace(h.originalMatch, `<h${h.level} id="${h.id}" class="scroll-mt-24 font-heading font-semibold tracking-tight text-foreground">${h.text}</h${h.level}>`);
+  });
+
   return (
-    <div className="space-y-12">
-      <header className="space-y-4">
-        <nav className="text-muted-foreground flex flex-wrap items-center gap-x-2 gap-y-1 text-xs">
-          <Link href="/" className="hover:text-foreground transition-colors">
-            Accueil
-          </Link>
-          <span aria-hidden="true">/</span>
-          <Link href="/blog" className="hover:text-foreground transition-colors">
-            Blog
-          </Link>
-          <span aria-hidden="true">/</span>
-          <span className="text-foreground">{topicLabel}</span>
-        </nav>
+    <div className="space-y-12 pb-20">
+      {/* Header Section */}
+      <header className="relative space-y-8 py-10">
+         <div className="mx-auto max-w-4xl text-center space-y-6">
+             <div className="flex flex-wrap items-center justify-center gap-2">
+                <Badge variant="secondary" className="rounded-full px-3 py-1 text-sm bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+                   {topicLabel}
+                </Badge>
+                <span className="text-muted-foreground text-sm">&bull;</span>
+                <span className="flex items-center gap-1.5 text-sm text-muted-foreground">
+                   <CalendarDays className="size-4" />
+                   {formatDate(publishedDate)}
+                </span>
+             </div>
+             
+             <h1 className="font-heading text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl text-balance">
+                {post.title}
+             </h1>
 
-        <div className="space-y-3 text-center">
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <Badge className="bg-primary/10 text-primary hover:bg-primary/10">{topicLabel}</Badge>
-          </div>
+             {post.excerpt && (
+                <p className="text-xl text-muted-foreground text-pretty max-w-2xl mx-auto leading-relaxed">
+                   {post.excerpt}
+                </p>
+             )}
 
-          <h1 className="font-heading text-balance text-3xl font-extrabold tracking-tight sm:text-5xl">
-            {post.title}
-          </h1>
+             <div className="flex items-center justify-center gap-4 pt-4">
+                 <div className="flex items-center gap-3 bg-muted/50 rounded-full px-2 py-2 pr-5">
+                    <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center">
+                       <Newspaper className="size-5 text-primary" />
+                    </div>
+                    <div className="text-left leading-tight">
+                       <div className="text-sm font-semibold">Rédaction NCA</div>
+                       <div className="text-xs text-muted-foreground">Équipe éditoriale</div>
+                    </div>
+                 </div>
+                 <div className="h-8 w-px bg-border/60" />
+                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="size-4" />
+                    {readingMinutes} min de lecture
+                 </div>
+             </div>
+         </div>
 
-          <div className="text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-xs">
-            <span className="inline-flex items-center gap-2">
-              <CalendarDays className="size-4" aria-hidden="true" />
-              {formatDate(publishedDate)}
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Clock className="size-4" aria-hidden="true" />
-              {readingMinutes} min de lecture
-            </span>
-          </div>
-        </div>
+         {/* Hero Image */}
+         {coverSrc && (
+            <div className="relative mx-auto mt-12 aspect-[21/9] w-full max-w-6xl overflow-hidden rounded-[2.5rem] shadow-2xl ring-1 ring-border/20">
+               <Image
+                  src={coverSrc}
+                  alt={post.title}
+                  fill
+                  priority
+                  className="object-cover"
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent" />
+            </div>
+         )}
       </header>
+      
+      {/* Content Layout */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1fr_300px] lg:gap-16">
+            
+            {/* Main Content */}
+            <main className="min-w-0">
+               <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-heading prose-headings:text-foreground prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-img:rounded-2xl prose-strong:text-foreground prose-strong:font-semibold">
+                  <div dangerouslySetInnerHTML={{ __html: processedHtml }} />
+               </article>
 
-      {coverSrc ? (
-        <div className="ring-foreground/10 relative aspect-video w-full overflow-hidden rounded-3xl border border-muted/60 bg-muted shadow-sm ring-1">
-          <Image
-            src={coverSrc}
-            alt={`Illustration : ${post.title}`}
-            fill
-            priority
-            sizes="(min-width: 1024px) 1024px, 100vw"
-            className="object-cover"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/30 via-transparent to-transparent"
-          />
-        </div>
-      ) : null}
+               {/* Post Footer */}
+               <div className="mt-12 flex items-center justify-between border-t py-6">
+                  <div className="text-sm text-muted-foreground">
+                     Publié dans <span className="font-medium text-foreground">{topicLabel}</span>
+                  </div>
+                  <Button variant="ghost" asChild>
+                     <Link href="/blog">
+                        <ChevronLeft className="mr-2 size-4" />
+                        Retour au blog
+                     </Link>
+                  </Button>
+               </div>
+            </main>
 
-      <div className="mx-auto w-full max-w-3xl space-y-6">
-        {post.excerpt ? (
-          <p className="text-muted-foreground text-pretty text-sm leading-relaxed sm:text-base">
-            {post.excerpt}
-          </p>
-        ) : null}
+            {/* Sidebar (Table of Contents) */}
+            <aside className="hidden lg:block">
+               <div className="sticky top-32 space-y-8">
+                  {/* ToC Component */}
+                  {headers.length > 0 && (
+                      <div className="rounded-2xl border bg-card p-6 shadow-sm">
+                         <h3 className="font-heading mb-4 text-lg font-semibold">Sommaire</h3>
+                         <nav className="flex flex-col gap-2.5">
+                            {headers.map(h => (
+                               <a 
+                                 key={h.id} 
+                                 href={`#${h.id}`} 
+                                 className={cn(
+                                    "text-sm transition-colors hover:text-primary line-clamp-1",
+                                    h.level === 3 ? "pl-4 text-muted-foreground" : "font-medium text-foreground/80"
+                                 )}
+                               >
+                                  {h.text}
+                               </a>
+                            ))}
+                         </nav>
+                      </div>
+                  )}
 
-        <article className="rich-content">
-          <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
-        </article>
+                  {/* Share / CTA Card */}
+                  <div className="rounded-2xl border bg-primary/5 p-6 text-center">
+                     <h3 className="font-heading mb-2 text-lg font-semibold">Besoin d'un conseil ?</h3>
+                     <p className="mb-6 text-sm text-muted-foreground text-balance">
+                        Nos experts sont là pour répondre à vos questions sur l'{topicLabel.toLowerCase()}.
+                     </p>
+                     <Button className="w-full rounded-full" asChild>
+                        <Link href="/contactez-nous">Contactez-nous</Link>
+                     </Button>
+                  </div>
+               </div>
+            </aside>
 
-        <div className="border-border/60 flex flex-col gap-2 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-muted-foreground flex items-center gap-2 text-xs">
-            <Newspaper className="size-4" aria-hidden="true" />
-            {topicLabel}
-          </div>
-          <Button variant="ghost" size="sm" className="w-full sm:w-auto" asChild>
-            <Link href="/blog">Retour au blog</Link>
-          </Button>
-        </div>
+         </div>
       </div>
 
-      {related.length ? (
-        <section className="space-y-4">
-          <div className="space-y-1">
-            <h2 className="font-heading text-xl font-semibold tracking-tight">Articles similaires</h2>
-            <p className="text-muted-foreground text-sm">
-              Pour aller plus loin sur le même sujet.
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {related.map((p, idx) => {
-              const cover = relatedCovers[idx];
-              const label = TOPIC_LABELS[p.topicKey];
-              return (
-                <Card key={p.id} className="group border-muted/60 overflow-hidden py-0">
-                  <Link href={`/blog/${p.slug}`} className="block">
-                    <div className="relative aspect-video w-full overflow-hidden bg-muted">
-                      {cover ? (
+      {related.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 border-t">
+            <div className="mb-10 flex items-center justify-between">
+                <h2 className="font-heading text-3xl font-bold tracking-tight">Articles similaires</h2>
+                <Button variant="outline" className="hidden sm:inline-flex rounded-full" asChild>
+                   <Link href="/blog">Voir tout le blog</Link>
+                </Button>
+            </div>
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+             {related.map((p, idx) => {
+               const cover = relatedCovers[idx];
+               const label = TOPIC_LABELS[p.topicKey];
+               return (
+                  <Link key={p.id} href={`/blog/${p.slug}`} className="group flex flex-col overflow-hidden rounded-2xl bg-card ring-1 ring-border/50 hover:ring-primary/20 hover:shadow-lg transition-all">
+                     <div className="relative aspect-video w-full overflow-hidden bg-muted">
                         <Image
-                          src={cover}
-                          alt={`Illustration : ${p.title}`}
-                          fill
-                          sizes="(min-width: 1024px) 33vw, 100vw"
-                          className="object-cover transition-transform duration-500 group-hover:scale-105"
+                           src={cover || ""}
+                           alt={p.title}
+                           fill
+                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
-                      ) : (
-                        <div className="h-full w-full bg-gradient-to-br from-muted to-muted/50" />
-                      )}
-                      <div className="absolute left-3 top-3">
-                        <Badge className="bg-background/90 text-primary hover:bg-background/90">
-                          {label}
-                        </Badge>
-                      </div>
-                      <div
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/25 via-transparent to-transparent"
-                      />
-                    </div>
+                        <div className="absolute left-3 top-3">
+                           <Badge className="bg-background/90 text-foreground backdrop-blur-sm shadow-sm">{label}</Badge>
+                        </div>
+                     </div>
+                     <div className="flex flex-1 flex-col p-5">
+                       <h3 className="font-heading text-lg font-semibold leading-snug group-hover:text-primary transition-colors line-clamp-2 mb-2">
+                          {p.title}
+                       </h3>
+                       <p className="text-sm text-muted-foreground line-clamp-3 mb-4 flex-1">
+                          {p.excerpt}
+                       </p>
+                       <div className="mt-auto flex items-center text-xs font-medium text-primary">
+                          Lire l'article <ChevronRight className="ml-1 size-3.5" />
+                       </div>
+                     </div>
                   </Link>
-
-                  <CardHeader className="pb-0 pt-4">
-                    <CardTitle className="font-heading text-base leading-snug">
-                      <Link
-                        href={`/blog/${p.slug}`}
-                        className="hover:text-primary transition-colors"
-                      >
-                        {p.title}
-                      </Link>
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3 pt-4">
-                    {p.excerpt ? (
-                      <p className="text-muted-foreground line-clamp-3 text-sm leading-relaxed">
-                        {p.excerpt}
-                      </p>
-                    ) : null}
-                    <div className="border-border/60 border-t pt-3">
-                      <Button size="sm" variant="link" className="px-0" asChild>
-                        <Link href={`/blog/${p.slug}`}>Lire l’article</Link>
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
+               )
+             })}
           </div>
         </section>
-      ) : null}
-
-      <CtaBand />
+      )}
     </div>
   );
 }
-
-

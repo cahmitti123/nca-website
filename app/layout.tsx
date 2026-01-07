@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <body
-        className={`${quicksand.variable} ${figtree.variable} ${geistMono.variable} antialiased font-sans overflow-x-hidden`}
+        className={`${quicksand.variable} ${figtree.variable} ${geistMono.variable} antialiased font-sans`}
       >
         <ThemeProvider
           attribute="class"

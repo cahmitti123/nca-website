@@ -9,15 +9,12 @@ export const metadata: Metadata = {
     "Découvrez les meilleures assurances moto en ligne et comparez-les pour trouver celle qui convient le mieux à vos besoins.",
 };
 
+import { Shield, Bike, CloudRain, User } from "lucide-react";
+
 export default function AssuranceMotoPage() {
   const product = getInsuranceProduct("assurance-moto");
   return (
     <ProductLanding
-      breadcrumbs={[
-        { label: "Accueil", href: "/" },
-        { label: "Assurances", href: "/portail/offres" },
-        { label: "Assurance Moto" },
-      ]}
       badges={["Moto", "Protection"]}
       title="Assurance Moto"
       description="Il est possible de trouver une assurance moto à un prix raisonnable en définissant précisément vos besoins et en comparant les offres. Selon votre profil et votre moto, on ajuste les garanties pour obtenir un contrat cohérent à un prix compétitif."
@@ -28,15 +25,7 @@ export default function AssuranceMotoPage() {
       }}
       mainCard={{
         title: "Ce que l’on compare",
-        description:
-          "Nous passons en revue le niveau de couverture (tiers, vol/incendie, tous risques), les options utiles selon votre usage, et les paramètres clés (franchises, plafonds, assistance).",
-        bullets: [
-          "Responsabilité civile et garanties conducteurs.",
-          "Vol, incendie, dommages tous accidents.",
-          "Assistance, équipement, options selon l’usage.",
-          "Franchises et plafonds, selon votre budget.",
-          "Bonus/malus et conditions, selon votre historique.",
-        ],
+        description: "Nous passons en revue le niveau de couverture (tiers, vol/incendie, tous risques), les options utiles selon votre usage, et les paramètres clés.",
       }}
       sideCard={{
         title: "À savoir",
@@ -45,6 +34,43 @@ export default function AssuranceMotoPage() {
         bullets: ["Devis gratuit", "Comparaison des formules", "Explications claires des garanties"],
         actions: [{ label: "Demander un devis", href: "/demander-un-devis" }],
       }}
+      features={[
+        {
+          title: "Protection du Pilote",
+          description: "La garantie conducteur est essentielle. Nous veillons à ce qu'elle soit incluse et suffisante.",
+          icon: User,
+          colSpan: 2,
+        },
+        {
+          title: "Garantie Équipement",
+          description: "Casque, gants, blouson... Votre équipement coûte cher, assurez-le correctement.",
+          icon: Shield
+        },
+        {
+          title: "Assistance 0km",
+          description: "En cas de panne ou de crevaison, même en bas de chez vous, vous êtes dépanné.",
+          icon: Bike
+        },
+        {
+          title: "Hivernage",
+          description: "Suspension des garanties ou réduction de tarif si vous ne roulez pas l'hiver.",
+          icon: CloudRain
+        }
+      ]}
+      faq={[
+        {
+          question: "Quelle assurance moto est la moins chère ?",
+          answer: "La formule d’assurance moto la moins coûteuse est la responsabilité civile, aussi connue sous le nom d’assurance au tiers. Cette formule représente la couverture minimale requise par la loi."
+        },
+        {
+          question: "Comment calculer mon bonus moto ?",
+          answer: "Le bonus moto est calculé en fonction de vos années sans accidents responsables. En général, chaque année sans sinistre vous permet de bénéficier d’un bonus de 5%. Pour connaître votre bonus moto actuel, vous pouvez demander un relevé d’informations à votre assurance."
+        },
+        {
+          question: "Puis-je assurer une moto de collection ?",
+          answer: "Oui, nous avons des offres spécifiques pour les véhicules de collection, avec des tarifs souvent très avantageux pour un usage loisir."
+        }
+      ]}
       extra={
         <div className="space-y-6">
           <section className="space-y-2">

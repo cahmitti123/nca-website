@@ -4,7 +4,9 @@
 - **Next.js App Router** with route separation:
   - Public routes: `app/(public)/...`
     - Organized with **Route Groups** (folder names wrapped in parentheses) to share layouts without changing URLs:
-      - `app/(public)/(marketing)/...` + `app/(public)/(marketing)/(pages)/...`
+      - Home: `app/(public)/(home)/page.tsx` (special UX)
+      - Inner pages: share one chrome system (navbar second row + sticky sidebar)
+      - `app/(public)/(marketing)/(pages)/...`
       - `app/(public)/(products)/...`
       - `app/(public)/(forms)/...`
       - `app/(public)/(portal)/...`
@@ -40,6 +42,11 @@
 
 ### Public UI patterns (reusability)
 - Shared full-site background/texture is provided by `components/public/site-background.tsx` and mounted in `app/(public)/layout.tsx`.
+- **Layouts & navigation (single source of truth)**:
+  - `components/navbar.tsx`: home vs inner navbar behavior + inner breadcrumbs row + per-page controls.
+  - `components/public/inner-page-layout.tsx`: shared sticky sidebar + content grid for inner pages.
+  - `components/public/inner-section-layout.tsx`: one config map selecting sidebars per section.
+  - See `memory-bank/layouts.md` for the full “where to change what” guide.
 - Product/service pages use a reusable server component template:
   - `components/public/product-landing.tsx` (header + Pexels cover + main/side cards)
   - `components/public/bullet-list.tsx` for consistent feature lists.

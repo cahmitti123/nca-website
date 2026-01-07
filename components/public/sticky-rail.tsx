@@ -1,30 +1,67 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DotBackground } from "@/components/ui/dot-background";
 import { GridBackground } from "@/components/ui/grid-background";
 import { cn } from "@/lib/utils";
 
+import {
+  Newspaper,
+  Users,
+  Handshake,
+  Info,
+  Phone,
+  Scale,
+  Shield,
+  Cookie,
+  FileText,
+  AlertCircle,
+  Home,
+  LayoutDashboard,
+  FileCheck,
+  ChevronRight,
+  type LucideIcon,
+} from "lucide-react";
+
 export type StickyRailLink = {
   label: string;
   href: string;
+  iconName?: string;
+};
+
+export type StickyRailSection = {
+  title?: string;
+  links: readonly StickyRailLink[];
 };
 
 export type StickyRailProps = {
   title: string;
-  links: readonly StickyRailLink[];
-  /**
-   * Adds a subtle pattern behind the rail.
-   * @default "grid"
-   */
+  links?: readonly StickyRailLink[];
+  sections?: readonly StickyRailSection[];
   pattern?: "grid" | "dot" | "none";
   className?: string;
-  /**
-   * Max height for the scrollable link list. Defaults to fit most viewports.
-   */
   maxHeightClassName?: string;
   footer?: React.ReactNode;
+};
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  Newspaper,
+  Users,
+  Handshake,
+  Info,
+  Phone,
+  Scale,
+  Shield,
+  Cookie,
+  FileText,
+  AlertCircle,
+  Home,
+  LayoutDashboard,
+  FileCheck,
 };
 
 function RailSurface({
@@ -35,7 +72,7 @@ function RailSurface({
   children: React.ReactNode;
 }) {
   const surfaceClassName =
-    "border-muted/60 bg-primary/5 overflow-hidden rounded-xl border";
+    "border-muted/60 bg-primary/5 overflow-hidden rounded-md border";
 
   if (pattern === "dot") {
     return (
@@ -71,13 +108,21 @@ function RailSurface({
 export function StickyRail({
   title,
   links,
+  sections,
   pattern = "grid",
   className,
   maxHeightClassName,
   footer,
 }: StickyRailProps) {
+  const pathname = usePathname();
+  const allSections: StickyRailSection[] = sections
+    ? [...sections]
+    : links
+    ? [{ links }]
+    : [];
+
   return (
-    <div className={cn("sticky top-28 space-y-4", className)}>
+    <div className={cn("sticky top-24 space-y-4", className)}>
       <RailSurface pattern={pattern}>
         <Card className="border-0 bg-transparent  shadow-none ring-0">
           <CardHeader className="pb-0">
@@ -85,22 +130,46 @@ export function StickyRail({
           </CardHeader>
           <CardContent className="">
             <div className="relative">
-     
-
               <nav
                 className={cn(
-                  "grid gap-1 overflow-y-auto py-1 pr-2 [scrollbar-gutter:stable] max-h-[calc(100vh-22rem)]",
+                  "overflow-y-auto py-1 pr-2 [scrollbar-gutter:stable] max-h-[calc(100vh-22rem)] space-y-4",
                   maxHeightClassName,
                 )}
               >
-                {links.map((l) => (
-                  <Link
-                    key={l.href}
-                    href={l.href}
-                    className="hover:bg-primary/10 hover:text-foreground rounded-md px-3 py-2 text-sm text-muted-foreground transition-colors"
-                  >
-                    {l.label}
-                  </Link>
+                {allSections.map((section, idx) => (
+                  <div key={section.title ?? idx} className="space-y-2">
+                    {section.title ? (
+                      <h4 className="text-muted-foreground px-3 text-xs font-semibold uppercase tracking-wider">
+                        {section.title}
+                      </h4>
+                    ) : null}
+                    <div className="grid gap-1">
+                      {section.links.map((l) => {
+                         const isActive = pathname === l.href || pathname.startsWith(`${l.href}/`);
+                         const Icon = l.iconName ? ICON_MAP[l.iconName] : null;
+                         return (
+                          <Link
+                            key={l.href}
+                            href={l.href}
+                            className={cn(
+                                "group flex items-center justify-between rounded-md px-3 py-2 text-sm transition-all duration-200",
+                                isActive 
+                                  ? "bg-primary/10 text-primary font-semibold hover:bg-primary/15"
+                                  : "text-muted-foreground hover:bg-primary/5 hover:text-foreground"
+                            )}
+                          >
+                            <span className="flex items-center gap-2">
+                                {Icon && <Icon className={cn("size-4", isActive ? "text-primary" : "text-muted-foreground/70 group-hover:text-foreground")} />}
+                                {l.label}
+                            </span>
+                            {isActive && (
+                                <ChevronRight className="size-4 opacity-50" />
+                            )}
+                          </Link>
+                         );
+                      })}
+                    </div>
+                  </div>
                 ))}
               </nav>
             </div>
@@ -108,9 +177,22 @@ export function StickyRail({
         </Card>
       </RailSurface>
 
-      {footer ? <div>{footer}</div> : null}
+      {/* Enhanced Footer Contact Card */}
+      {footer ? (
+        <div>{footer}</div>
+      ) : (
+         <div className="rounded-xl border border-muted/60 bg-card p-4 shadow-sm">
+            <div className="flex items-center gap-3">
+               <div className="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Phone className="size-5" />
+               </div>
+               <div>
+                  <div className="text-xs font-medium text-muted-foreground">Besoin d&apos;aide ?</div>
+                  <a href="tel:0164074768" className="font-bold hover:underline text-sm block">01 64 07 47 68</a>
+               </div>
+            </div>
+         </div>
+      )}
     </div>
   );
 }
-
-

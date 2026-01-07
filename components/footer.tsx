@@ -30,104 +30,58 @@ const Footer = () => {
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.25),transparent_55%)]"
       />
 
-      <div className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-10 text-sm md:grid-cols-3">
-        <div className="space-y-2">
-          <div className="text-xs font-medium tracking-tight">{siteContact.brandName}</div>
-          <p className="text-primary-foreground/80 text-xs leading-relaxed">
-            Courtier en assurance de référence depuis 2007. Nous proposons une large gamme de
-            solutions d’assurance pour les particuliers et les professionnels. Contactez-nous pour
-            obtenir un devis personnalisé.
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-8 px-4 py-12 text-sm md:grid-cols-4 lg:gap-12">
+        {/* Col 1: Brand */}
+        <div className="space-y-4">
+          <div className="text-sm font-bold tracking-tight">{siteContact.brandName}</div>
+          <p className="text-primary-foreground/80 text-xs leading-relaxed max-w-xs">
+            Courtier en assurance de référence depuis 2007. Nous simplifions vos démarches pour trouver la protection idéale (Particuliers & Pros).
           </p>
-          <div className="text-primary-foreground/75 space-y-1 text-xs">
-            <div>{siteContact.address}</div>
-            <div>
-              <a
-                className="hover:text-primary-foreground transition-colors"
-                href={`tel:${siteContact.phonePrimary.tel}`}
-              >
-                {siteContact.phonePrimary.display}
-              </a>
-            </div>
-            <div>
-              <a
-                className="hover:text-primary-foreground transition-colors"
-                href={`tel:${siteContact.phoneSecondary.tel}`}
-              >
-                {siteContact.phoneSecondary.display}
-              </a>
-            </div>
-            <div>
-              <a
-                className="hover:text-primary-foreground transition-colors"
-                href={`mailto:${siteContact.email}`}
-              >
-                {siteContact.email}
-              </a>
-            </div>
-            <div>{siteContact.hours.display}</div>
+          <div className="text-primary-foreground/75 space-y-2 text-xs pt-2">
+            <div className="font-medium">{siteContact.phonePrimary.display}</div>
+            <div>{siteContact.email}</div>
+            <div className="opacity-80">{siteContact.address}</div>
           </div>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-xs font-medium tracking-tight">Plus sur NCA</div>
-          <ul className="text-primary-foreground/75 space-y-1 text-xs">
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/qui-sommes-nous">
-                Qui sommes-nous
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/gerer-les-cookies">
-                Gérer les cookies
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-primary-foreground transition-colors"
-                href="/politique-de-confidentialite"
-              >
-                Politique de confidentialité
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/mentions-legales-cgu">
-                Mentions légales – CGU
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-primary-foreground transition-colors"
-                href="/services-clients-reclamations"
-              >
-                Services clients & réclamations
-              </Link>
-            </li>
-            <li>
-              <Link
-                className="hover:text-primary-foreground transition-colors"
-                href="/demander-un-devis"
-              >
-                Demander un devis
-              </Link>
-            </li>
-            <li>
-              <Link className="hover:text-primary-foreground transition-colors" href="/blog">
-                Nos articles
-              </Link>
-            </li>
+        {/* Col 2: Navigation */}
+        <div className="space-y-4">
+          <div className="text-xs font-bold tracking-wider uppercase text-primary-foreground/60">Entreprise</div>
+          <ul className="text-primary-foreground/80 space-y-2.5 text-xs">
+            <li><Link className="hover:text-white transition-colors" href="/qui-sommes-nous">Qui sommes-nous</Link></li>
+            <li><Link className="hover:text-white transition-colors" href="/nos-solutions">Nos solutions</Link></li>
+            <li><Link className="hover:text-white transition-colors" href="/blog">Actualités & Conseils</Link></li>
+            <li><Link className="hover:text-white transition-colors" href="/contactez-nous">Contact & Agence</Link></li>
+            <li><Link className="hover:text-white transition-colors" href="/demander-un-devis">Demander un devis</Link></li>
           </ul>
         </div>
 
-        <div className="space-y-2">
-          <div className="text-xs font-medium tracking-tight">Nos assurances</div>
-          <ul className="text-primary-foreground/75 space-y-1 text-xs">
-            {footerProducts.map((p) => (
-              <li key={p.key}>
-                <Link className="hover:text-primary-foreground transition-colors" href={p.href}>
-                  {p.title}
-                </Link>
-              </li>
-            ))}
+        {/* Col 3: Products (Particuliers) */}
+        <div className="space-y-4">
+          <div className="text-xs font-bold tracking-wider uppercase text-primary-foreground/60">Particuliers</div>
+          <ul className="text-primary-foreground/80 space-y-2.5 text-xs">
+             {insuranceProducts.filter(p => p.group === "vehicle").map((p) => (
+                <li key={p.key}>
+                  <Link className="hover:text-white transition-colors" href={p.href}>{p.title}</Link>
+                </li>
+             ))}
+             {insuranceProducts.filter(p => p.group === "health").map((p) => (
+                <li key={p.key}>
+                  <Link className="hover:text-white transition-colors" href={p.href}>{p.title}</Link>
+                </li>
+             ))}
+          </ul>
+        </div>
+
+        {/* Col 4: Products (Immo & Pro) */}
+        <div className="space-y-4">
+          <div className="text-xs font-bold tracking-wider uppercase text-primary-foreground/60">Immobilier & Pro</div>
+          <ul className="text-primary-foreground/80 space-y-2.5 text-xs">
+             {insuranceProducts.filter(p => p.group === "property").map((p) => (
+                <li key={p.key}>
+                  <Link className="hover:text-white transition-colors" href={p.href}>{p.title}</Link>
+                </li>
+             ))}
           </ul>
         </div>
       </div>

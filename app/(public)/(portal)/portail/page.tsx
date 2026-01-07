@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import type { ComponentType } from "react";
 
-import { PageIntro, PageShell } from "@/components/public/page-shell";
+import { PortalPage } from "@/components/public/portal-page";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,37 +60,28 @@ export default function PortailPage() {
   const sante = insuranceProducts.find((p) => p.key === "mutuelle-sante");
 
   return (
-    <PageShell className="space-y-10">
-      <PageIntro
-        breadcrumbs={
-          <>
-            <Link href="/" className="hover:text-foreground transition-colors">
-              Accueil
-            </Link>
-            <span aria-hidden="true">/</span>
-            <span className="text-foreground">Portail d’informations</span>
-          </>
-        }
-        kicker={
-          <Badge variant="secondary" className="border-primary/15 bg-primary/10 text-primary">
-            Portail info
-          </Badge>
-        }
-        title="Centre de ressources"
-        description={
-          <div className="space-y-2">
-            <p>
-              Retrouvez ici nos guides pratiques, des explications claires sur vos contrats et les
-              réponses aux questions les plus fréquentes.
-            </p>
-            <p>
-              L’objectif est simple : vous aider à y voir clair avant une demande de devis (garanties,
-              options, franchises, délais, exclusions) et à avancer avec les bonnes informations, sans
-              jargon inutile.
-            </p>
-          </div>
-        }
-      />
+    <PortalPage
+      path="/portail"
+      title="Centre de ressources"
+      description={
+        <div className="space-y-2">
+          <p>
+            Retrouvez ici nos guides pratiques, des explications claires sur vos contrats et les
+            réponses aux questions les plus fréquentes.
+          </p>
+          <p>
+            L’objectif est simple : vous aider à y voir clair avant une demande de devis (garanties,
+            options, franchises, délais, exclusions) et à avancer avec les bonnes informations, sans
+            jargon inutile.
+          </p>
+        </div>
+      }
+      highlights={[
+        "Guides pratiques pour comprendre garanties, options, franchises et exclusions.",
+        "Accès rapide à nos solutions principales et à des liens utiles.",
+        "Ressources complémentaires : blog, espace juridique, documents pratiques.",
+      ]}
+    >
 
       <section className="space-y-4">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
@@ -179,7 +170,7 @@ export default function PortailPage() {
           </Card>
         </div>
       </section>
-    </PageShell>
+    </PortalPage>
   );
 }
 

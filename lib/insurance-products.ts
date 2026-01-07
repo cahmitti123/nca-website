@@ -13,6 +13,7 @@ export type InsuranceProduct = {
   title: string;
   href: string;
   category: string;
+  group: "vehicle" | "health" | "property" | "other";
   description: string;
   illustrationSrc?: string;
   fallbackCoverSrc: string;
@@ -25,6 +26,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Mutuelle Santé",
     href: "/sante-prevoyance/mutuelle-sante",
     category: "Assurances personnelles",
+    group: "health",
     description: "Une couverture santé sur mesure, adaptée à votre budget et à vos priorités.",
     illustrationSrc: "/illustrations/mutuelle sante.png",
     fallbackCoverSrc: "/cover-sante.svg",
@@ -35,6 +37,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Assurance Emprunteur",
     href: "/assurance-emprunteur",
     category: "Assurances personnelles",
+    group: "property",
     description: "Sécurisez votre crédit immobilier avec des garanties adaptées à votre projet.",
     illustrationSrc: "/illustrations/embrunteur.png",
     fallbackCoverSrc: "/cover-emprunteur.svg",
@@ -45,6 +48,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Assurance Auto",
     href: "/assurance-auto",
     category: "Assurances personnelles",
+    group: "vehicle",
     description: "Des options ajustées à votre véhicule et votre usage.",
     illustrationSrc: "/illustrations/assurance auto.png",
     fallbackCoverSrc: "/cover-auto.svg",
@@ -55,6 +59,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Assurance Moto",
     href: "/assurance-moto",
     category: "Assurances personnelles",
+    group: "vehicle",
     description: "Comparez les garanties et trouvez une protection adaptée.",
     illustrationSrc: "/illustrations/assurance moto.png",
     fallbackCoverSrc: "/cover-moto.svg",
@@ -65,6 +70,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Assurance Prévoyance",
     href: "/sante-prevoyance/prevoyance",
     category: "Assurances personnelles",
+    group: "health",
     description: "Anticipez l'imprévu et protégez vos proches.",
     illustrationSrc: "/illustrations/hero_illustration_1.png",
     fallbackCoverSrc: "/cover-prevoyance.svg",
@@ -75,6 +81,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Garantie Décennale",
     href: "/garantie-decennale",
     category: "Assurances entreprise",
+    group: "property",
     description: "Sécurisez vos travaux sur le long terme avec une couverture adaptée.",
     illustrationSrc: "/illustrations/decenale.png",
     fallbackCoverSrc: "/cover-decennale.svg",
@@ -85,6 +92,7 @@ export const insuranceProducts: readonly InsuranceProduct[] = [
     title: "Complémentaire santé senior",
     href: "/complementaire-sante-senior",
     category: "Assurances personnelles",
+    group: "health",
     description: "Une couverture senior adaptée (hospitalisation, dentaire, optique) avec devis gratuit.",
     illustrationSrc: "/illustrations/mutuelle sante.png",
     fallbackCoverSrc: "/cover-sante.svg",

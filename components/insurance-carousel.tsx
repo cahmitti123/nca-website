@@ -5,18 +5,34 @@ import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import { GridBackground } from "@/components/ui/grid-background";
 import { insuranceProducts } from "@/lib/insurance-products";
 import { ShieldCheck } from "lucide-react";
+import { getPexelsImageUrl } from "@/lib/pexels";
+import { PEXELS_DEFAULT_LOCALE, PEXELS_DEFAULT_REVALIDATE_SECONDS } from "@/lib/stock-images";
 
-export default function InsuranceCarousel() {
-  const cards = insuranceProducts.slice(0, 6);
-  const items = cards.map((c, index) => (
+export default async function InsuranceCarousel() {
+  const cardsData = insuranceProducts.slice(0, 6);
+  
+  const cardsWithImages = await Promise.all(
+    cardsData.map(async (c) => {
+      const src = await getPexelsImageUrl(c.title + " photography", {
+        orientation: "portrait",
+        size: "large",
+        locale: PEXELS_DEFAULT_LOCALE,
+        revalidateSeconds: PEXELS_DEFAULT_REVALIDATE_SECONDS,
+      });
+      return { ...c, src: src || c.fallbackCoverSrc };
+    })
+  );
+
+  const items = cardsWithImages.map((c, index) => (
     <Card
       key={c.href}
       index={index}
       card={{
         category: c.category,
         title: c.title,
-        src: c.illustrationSrc ?? c.fallbackCoverSrc,
-        content: (
+        src: c.src,
+        href: c.href,
+        content: ( // Keeping content for type safety, though it won't be used for linking cards
           <div className="space-y-4">
             <p className="text-muted-foreground text-sm">{c.description}</p>
             <div className="flex flex-col gap-2 sm:flex-row">

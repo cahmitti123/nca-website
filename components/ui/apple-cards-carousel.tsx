@@ -7,11 +7,8 @@ import React, {
   createContext,
   useContext,
 } from "react";
-import {
-  IconArrowNarrowLeft,
-  IconArrowNarrowRight,
-  IconX,
-} from "@tabler/icons-react";
+import Link from "next/link";
+import { IconArrowNarrowLeft, IconArrowNarrowRight, IconX } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useOutsideClick } from "@/hooks/use-outside-click";
@@ -28,7 +25,8 @@ type Card = {
   src: string;
   title: string;
   category: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
+  href?: string;
 };
 
 export const CarouselContext = createContext<{
@@ -200,6 +198,41 @@ export const Card = ({
     setOpen(true);
   };
 
+  const CardContent = (
+    <div className="relative z-10 flex h-72 w-60 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-96 md:w-80 dark:bg-neutral-900">
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
+        <div className="relative z-40 p-6">
+          <motion.p
+            layoutId={layout ? `category-${card.category}` : undefined}
+            className="text-left font-sans text-sm font-medium text-white md:text-base"
+          >
+            {card.category}
+          </motion.p>
+          <motion.p
+            layoutId={layout ? `title-${card.title}` : undefined}
+            className="mt-2 max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl"
+          >
+            {card.title}
+          </motion.p>
+        </div>
+        <BlurImage
+          src={card.src}
+          alt={card.title}
+          fill
+          sizes="(min-width: 768px) 320px, 240px"
+          className="absolute inset-0 z-10 object-cover"
+        />
+    </div>
+  );
+
+  if (card.href) {
+    return (
+      <Link href={card.href} className="block rounded-3xl">
+         {CardContent}
+      </Link>
+    );
+  }
+
   return (
     <>
       <AnimatePresence>
@@ -248,30 +281,9 @@ export const Card = ({
       <motion.button
         layoutId={layout ? `card-${card.title}` : undefined}
         onClick={handleOpen}
-        className="relative z-10 flex h-72 w-60 flex-col items-start justify-start overflow-hidden rounded-3xl bg-gray-100 md:h-96 md:w-80 dark:bg-neutral-900"
+        className="block rounded-3xl"
       >
-        <div className="pointer-events-none absolute inset-x-0 top-0 z-30 h-full bg-gradient-to-b from-black/50 via-transparent to-transparent" />
-        <div className="relative z-40 p-6">
-          <motion.p
-            layoutId={layout ? `category-${card.category}` : undefined}
-            className="text-left font-sans text-sm font-medium text-white md:text-base"
-          >
-            {card.category}
-          </motion.p>
-          <motion.p
-            layoutId={layout ? `title-${card.title}` : undefined}
-            className="mt-2 max-w-xs text-left font-sans text-xl font-semibold [text-wrap:balance] text-white md:text-3xl"
-          >
-            {card.title}
-          </motion.p>
-        </div>
-        <BlurImage
-          src={card.src}
-          alt={card.title}
-          fill
-          sizes="(min-width: 768px) 320px, 240px"
-          className="absolute inset-0 z-10 object-cover"
-        />
+        {CardContent}
       </motion.button>
     </>
   );
@@ -279,7 +291,7 @@ export const Card = ({
 
 type BlurImageProps = Omit<ImageProps, "loader" | "unoptimized">;
 
-export const BlurImage = ({ className, alt, ...rest }: BlurImageProps) => {
+export const BlurImage = ({ className, alt, onLoad, ...rest }: BlurImageProps) => {
   const [isLoading, setLoading] = useState(true);
   return (
     <Image
@@ -292,7 +304,10 @@ export const BlurImage = ({ className, alt, ...rest }: BlurImageProps) => {
         isLoading ? "blur-sm" : "blur-0",
         className
       )}
-      onLoadingComplete={() => setLoading(false)}
+      onLoad={(event) => {
+        setLoading(false);
+        onLoad?.(event);
+      }}
     />
   );
 };
