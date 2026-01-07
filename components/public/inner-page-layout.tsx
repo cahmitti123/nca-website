@@ -32,14 +32,16 @@ export function InnerPageLayout({
     <div className={cn("relative container mx-auto px-4 md:px-6", className)}>
       <div 
         className={cn(
-          "grid grid-cols-1 gap-8 py-8 lg:py-12",
+          // No top padding here: keeps sticky sidebars locked from the first scroll pixel.
+          // Main content gets its own padding instead.
+          "grid grid-cols-1 gap-8 pb-8 lg:pb-12",
           rightSidebar 
             ? "lg:grid-cols-[16rem_1fr_16rem] xl:grid-cols-[18rem_1fr_18rem] lg:gap-10" 
             : "lg:grid-cols-[16rem_1fr] lg:gap-12 xl:grid-cols-[18rem_1fr]"
         )}
       >
         {/* Left Sidebar (Desktop) - Sticky */}
-        <aside className="hidden lg:block sticky top-24 self-start pb-10">
+        <aside className="hidden lg:block sticky top-24 self-start pb-10 pt-8 lg:pt-12">
           {sidebar ? (
             <div className="pr-4">{sidebar}</div>
           ) : sidebarLinks || sidebarSections ? (
@@ -73,7 +75,7 @@ export function InnerPageLayout({
         </aside>
 
         {/* Main Content */}
-        <main className="min-w-0">
+        <main className="min-w-0 pt-8 lg:pt-12">
           <div className="animate-in fade-in slide-in-from-bottom-4 duration-700 ease-out">
             {children}
           </div>
@@ -81,7 +83,7 @@ export function InnerPageLayout({
 
         {/* Right Sidebar (Desktop) - Sticky */}
         {rightSidebar && (
-          <aside className="hidden lg:block sticky top-24 self-start pb-10">
+          <aside className="hidden lg:block sticky top-24 self-start pb-10 pt-8 lg:pt-12">
             <div className="pl-4">
               {rightSidebar}
             </div>
