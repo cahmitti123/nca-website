@@ -1,6 +1,6 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconChevronDown, IconMenu2, IconX } from "@tabler/icons-react";
 import {
   motion,
   AnimatePresence,
@@ -9,9 +9,15 @@ import {
   useReducedMotion,
 } from "framer-motion";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import Link from "next/link";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 
 type NavbarVariant = "floating" | "solid";
@@ -32,8 +38,15 @@ interface NavBodyProps {
 interface NavItemsProps {
   items: {
     name: string;
-    link: string;
+    link?: string;
     active?: boolean;
+    icon?: React.ReactNode;
+    children?: {
+      name: string;
+      link: string;
+      active?: boolean;
+      icon?: React.ReactNode;
+    }[];
   }[];
   className?: string;
   onItemClick?: () => void;
@@ -124,10 +137,10 @@ export const NavBody = ({ children, className, visible, variant = "floating" }: 
       }}
       className={cn(
         isSolid
-          ? "relative z-[60] mx-auto hidden h-16 w-full max-w-7xl flex-row items-center justify-between self-start bg-transparent px-4 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out"
-          : "relative z-[60] mx-auto hidden w-full max-w-6xl flex-row items-center justify-between self-start rounded-full border border-transparent bg-transparent px-3 py-2 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out",
+          ? "relative z-60 mx-auto hidden h-16 w-full max-w-7xl flex-row items-center justify-between self-start bg-transparent px-4 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out"
+          : "relative z-60 mx-auto hidden w-full max-w-6xl flex-row items-center justify-between self-start rounded-full border border-transparent bg-transparent px-3 py-2 lg:flex transition-[border-radius,background-color,border-color] duration-200 ease-out",
         surface && !isSolid
-          ? "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50"
+          ? "border-border/60 bg-background/70 supports-backdrop-filter:bg-background/50"
           : null,
         className,
       )}
@@ -138,8 +151,122 @@ export const NavBody = ({ children, className, visible, variant = "floating" }: 
 };
 
 export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
-  const activeIndex = items.findIndex((item) => item.active);
-  const [hovered, setHovered] = useState<number | null>(activeIndex >= 0 ? activeIndex : null);
+  type NavItem = NavItemsProps["items"][number];
+  type NavItemChild = NonNullable<NavItem["children"]>[number];
+
+  const hasChildren = React.useCallback(
+    (item: NavItem): item is NavItem & { children: NavItemChild[] } =>
+      Array.isArray(item.children) && item.children.length > 0,
+    [],
+  );
+
+  function NavDropdownItem({
+    item,
+  }: {
+    item: NavItem & { children: NavItemChild[] };
+  }) {
+    const [open, setOpen] = useState(false);
+    const closeTimeoutIdRef = useRef<number | null>(null);
+
+    const clearCloseTimeout = React.useCallback(() => {
+      if (closeTimeoutIdRef.current === null) return;
+      window.clearTimeout(closeTimeoutIdRef.current);
+      closeTimeoutIdRef.current = null;
+    }, []);
+
+    const scheduleClose = React.useCallback(() => {
+      clearCloseTimeout();
+      closeTimeoutIdRef.current = window.setTimeout(() => {
+        setOpen(false);
+        closeTimeoutIdRef.current = null;
+      }, 120);
+    }, [clearCloseTimeout]);
+
+    useEffect(() => {
+      return () => {
+        clearCloseTimeout();
+      };
+    }, [clearCloseTimeout]);
+
+    return (
+      <DropdownMenu open={open} onOpenChange={setOpen} modal={false}>
+        <DropdownMenuTrigger asChild>
+          {item.link ? (
+            <Link
+              href={item.link}
+              onClick={onItemClick}
+              aria-current={item.active ? "page" : undefined}
+              className={cn(
+                "group relative inline-flex items-center gap-2 px-1 py-2 text-sm transition-colors hover:text-foreground/90",
+                item.active ? "text-foreground font-semibold" : "text-muted-foreground",
+              )}
+              onMouseEnter={() => {
+                clearCloseTimeout();
+                setOpen(true);
+              }}
+              onMouseLeave={scheduleClose}
+              onFocus={() => {
+                clearCloseTimeout();
+                setOpen(true);
+              }}
+            >
+              {item.icon ? <span aria-hidden="true">{item.icon}</span> : null}
+              <span className="relative z-20">{item.name}</span>
+              <IconChevronDown className="size-3 opacity-70" aria-hidden="true" />
+            </Link>
+          ) : (
+            <button
+              type="button"
+              aria-current={item.active ? "page" : undefined}
+              className={cn(
+                "group relative inline-flex items-center gap-2 px-1 py-2 text-sm transition-colors hover:text-foreground/90",
+                item.active ? "text-foreground font-semibold" : "text-muted-foreground",
+              )}
+              onMouseEnter={() => {
+                clearCloseTimeout();
+                setOpen(true);
+              }}
+              onMouseLeave={scheduleClose}
+              onFocus={() => {
+                clearCloseTimeout();
+                setOpen(true);
+              }}
+            >
+              {item.icon ? <span aria-hidden="true">{item.icon}</span> : null}
+              <span className="relative z-20">{item.name}</span>
+              <IconChevronDown className="size-3 opacity-70" aria-hidden="true" />
+            </button>
+          )}
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          align="start"
+          className="w-72"
+          onMouseEnter={clearCloseTimeout}
+          onMouseLeave={scheduleClose}
+        >
+          {item.children.map((child) => (
+            <DropdownMenuItem
+              key={child.link}
+              className={cn(child.active ? "bg-muted/50 font-medium" : undefined)}
+              asChild
+            >
+              {child.link.startsWith("/") ? (
+                <Link href={child.link} onClick={onItemClick}>
+                  {child.icon ? <span aria-hidden="true">{child.icon}</span> : null}
+                  {child.name}
+                </Link>
+              ) : (
+                <a href={child.link} onClick={onItemClick}>
+                  {child.icon ? <span aria-hidden="true">{child.icon}</span> : null}
+                  {child.name}
+                </a>
+              )}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
   return (
     <div
@@ -148,20 +275,31 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
         className,
       )}
     >
-      {items.map((item, idx) => (
-        <Link
-          onClick={onItemClick}
-          aria-current={item.active ? "page" : undefined}
-          className={cn(
-            "relative px-1 py-2 text-sm transition-colors hover:text-foreground/90",
-            item.active ? "text-foreground font-semibold" : "text-muted-foreground",
-          )}
-          key={`link-${idx}`}
-          href={item.link}
-        >
-          <span className="relative z-20">{item.name}</span>
-        </Link>
-      ))}
+      {items.map((item) => {
+        if (hasChildren(item)) {
+          return <NavDropdownItem key={item.link ?? item.name} item={item} />;
+        }
+
+        if (item.link) {
+          return (
+            <Link
+              key={item.link}
+              onClick={onItemClick}
+              aria-current={item.active ? "page" : undefined}
+              className={cn(
+                "group relative inline-flex items-center gap-2 px-1 py-2 text-sm transition-colors hover:text-foreground/90",
+                item.active ? "text-foreground font-semibold" : "text-muted-foreground",
+              )}
+              href={item.link}
+            >
+              {item.icon ? <span aria-hidden="true">{item.icon}</span> : null}
+              <span className="relative z-20">{item.name}</span>
+            </Link>
+          );
+        }
+
+        return null;
+      })}
     </div>
   );
 };
@@ -197,7 +335,7 @@ export const MobileNav = ({ children, className, visible, variant = "floating" }
           ? "relative z-50 mx-auto flex h-12 w-full max-w-7xl flex-col justify-center bg-transparent px-4 lg:hidden transition-[border-radius,background-color,border-color] duration-200 ease-out"
           : "relative z-50 mx-auto flex w-full max-w-[calc(100vw-2rem)] flex-col items-center justify-between border border-transparent bg-transparent px-0 py-2 lg:hidden transition-[border-radius,background-color,border-color] duration-200 ease-out",
         surface && !isSolid
-          ? "border-border/60 bg-background/70 supports-[backdrop-filter]:bg-background/50"
+          ? "border-border/60 bg-background/70 supports-backdrop-filter:bg-background/50"
           : null,
         className,
       )}
@@ -244,7 +382,7 @@ export const MobileNavMenu = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className={cn(
-            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg border bg-background/95 px-4 py-6 shadow-sm supports-[backdrop-filter]:bg-background/80",
+            "absolute inset-x-0 top-16 z-50 flex w-full flex-col items-start justify-start gap-4 rounded-lg border bg-background/95 px-4 py-6 shadow-sm supports-backdrop-filter:bg-background/80",
             className,
           )}
         >

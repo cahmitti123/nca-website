@@ -35,7 +35,6 @@ const groupedProductSections: { title: string; links: { label: string; href: str
   },
 ].filter((s) => s.links.length > 0);
 
-const productLinks = insuranceProducts.map((p) => ({ label: p.title, href: p.href }));
 
 type SectionConfig = Omit<InnerPageLayoutProps, "children">;
 

@@ -12,12 +12,12 @@ export const siteContact = {
     mediator: "le.mediateur@mediation-assurance.org",
   },
   phonePrimary: {
-    tel: "+33183889733",
-    display: "01 83 88 97 33",
-  },
-  phoneSecondary: {
     tel: "+33554540716",
     display: "05 54 54 07 16",
+  },
+  phoneSecondary: {
+    tel: "+33183889733",
+    display: "01 83 88 97 33",
   },
   hours: {
     display: "09h00–17h00",

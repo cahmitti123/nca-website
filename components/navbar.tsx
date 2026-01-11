@@ -31,6 +31,8 @@ import { insuranceProducts } from "@/lib/insurance-products";
 import { contentLinks, formLinks, legalLinks, marketingLinks } from "@/lib/public-links";
 import { getPortalBreadcrumbs } from "@/lib/portal/portal-nav";
 import { SiteCommandMenu } from "@/components/site-command-menu";
+import { Cookie, FileText, Home, Info, Mail, Newspaper, Phone, Scale, Shield } from "lucide-react";
+import { siteContact } from "@/lib/site-contact";
 
 type Crumb = { label: string; href?: string };
 
@@ -46,6 +48,13 @@ const Navbar = () => {
 
   const normalizedPathname = pathname.length > 1 && pathname.endsWith("/") ? pathname.slice(0, -1) : pathname;
 
+  const isActiveHref = React.useCallback(
+    (href: string) => normalizedPathname === href || normalizedPathname.startsWith(`${href}/`),
+    [normalizedPathname],
+  );
+
+  const isComplaintRoute = isActiveHref("/contact-reclamations/reclamation");
+
   const isFormsRoute =
     normalizedPathname.startsWith("/contact-reclamations") ||
     normalizedPathname.startsWith("/demander-un-devis") ||
@@ -59,18 +68,137 @@ const Navbar = () => {
     insuranceProducts.some((p) => normalizedPathname === p.href || normalizedPathname.startsWith(`${p.href}/`));
 
   const isBlogActive = normalizedPathname === "/blog" || normalizedPathname.startsWith("/blog/");
-  const isContactActive =
-    normalizedPathname === "/contactez-nous" ||
-    isFormsRoute ||
-    normalizedPathname === "/services-clients-reclamations";
+  const isLegalActive = legalLinks.some((l) => isActiveHref(l.href)) || isComplaintRoute;
 
-  const items = [
-    { name: "Accueil", link: "/", active: normalizedPathname === "/" },
-    { name: "Nos Solutions", link: "/nos-solutions", active: normalizedPathname === "/nos-solutions" || isAssurancesActive },
-    { name: "Blog", link: "/blog", active: isBlogActive },
-    { name: "Contact", link: "/contactez-nous", active: isContactActive },
-    
-  ] as const;
+  const isContactActive = normalizedPathname === "/contactez-nous" || (isFormsRoute && !isComplaintRoute);
+
+  const iconClassName = (active: boolean) =>
+    cn(
+      "size-4 text-muted-foreground/70 transition-colors",
+      active
+        ? "text-foreground"
+        : "group-hover:text-primary group-hover/button:text-primary group-hover/dropdown-menu-item:text-primary",
+    );
+
+
+  const contactsDropdownItems: NonNullable<React.ComponentProps<typeof NavItems>["items"][number]["children"]> = [
+    {
+      name: "Appeler",
+      link: `tel:${siteContact.phonePrimary.tel}`,
+      active: false,
+      icon: <Phone className={iconClassName(false)} aria-hidden="true" />,
+    },
+    {
+      name: "Envoyer un email",
+      link: `mailto:${siteContact.email}`,
+      active: false,
+      icon: <Mail className={iconClassName(false)} aria-hidden="true" />,
+    },
+      {
+        name: "Services clients & réclamations",
+        link: "/services-clients-reclamations",
+        active: isActiveHref("/services-clients-reclamations"),
+        icon: (
+          <Phone
+            className={iconClassName(isActiveHref("/services-clients-reclamations"))}
+            aria-hidden="true"
+          />
+        ),
+      },
+  ];
+
+  const legalDropdownItems: NonNullable<React.ComponentProps<typeof NavItems>["items"][number]["children"]> = [
+
+    {
+      name: "Espace juridique",
+      link: "/espace-juridique",
+      active: isActiveHref("/espace-juridique"),
+      icon: <Scale className={iconClassName(isActiveHref("/espace-juridique"))} aria-hidden="true" />,
+    },
+    {
+      name: "Services clients & réclamations",
+      link: "/services-clients-reclamations",
+      active: isActiveHref("/services-clients-reclamations"),
+      icon: (
+        <Phone
+          className={iconClassName(isActiveHref("/services-clients-reclamations"))}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      name: "Mentions légales & CGU",
+      link: "/mentions-legales-cgu",
+      active: isActiveHref("/mentions-legales-cgu"),
+      icon: (
+        <Info className={iconClassName(isActiveHref("/mentions-legales-cgu"))} aria-hidden="true" />
+      ),
+    },
+    {
+      name: "Politique de confidentialité",
+      link: "/politique-de-confidentialite",
+      active: isActiveHref("/politique-de-confidentialite"),
+      icon: (
+        <FileText
+          className={iconClassName(isActiveHref("/politique-de-confidentialite"))}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      name: "Gérer les cookies",
+      link: "/gerer-les-cookies",
+      active: isActiveHref("/gerer-les-cookies"),
+      icon: (
+        <Cookie className={iconClassName(isActiveHref("/gerer-les-cookies"))} aria-hidden="true" />
+      ),
+    },
+  ];
+
+  const items: React.ComponentProps<typeof NavItems>["items"] = [
+    {
+      name: "Accueil",
+      link: "/",
+      active: normalizedPathname === "/",
+      icon: <Home className={iconClassName(normalizedPathname === "/")} aria-hidden="true" />,
+    },
+    {
+      name: "Nos Solutions",
+      link: "/nos-solutions",
+      active: normalizedPathname === "/nos-solutions" || isAssurancesActive,
+      icon: (
+        <Shield
+          className={iconClassName(normalizedPathname === "/nos-solutions" || isAssurancesActive)}
+          aria-hidden="true"
+        />
+      ),
+    },
+    {
+      name: "Espace juridique",
+      active: isLegalActive,
+      icon: <Scale className={iconClassName(isLegalActive)} aria-hidden="true" />,
+      children: legalDropdownItems,
+    },
+    {
+      name: "Blog",
+      link: "/blog",
+      active: isBlogActive,
+      icon: <Newspaper className={iconClassName(isBlogActive)} aria-hidden="true" />,
+    },
+    // {
+    //   name: "Contact",
+    //   link: "/contactez-nous",
+    //   active: isContactActive,
+    //   icon: <Phone className={iconClassName(isContactActive)} aria-hidden="true" />,
+    // },
+    {
+      name: "Contact",
+      link: "/contactez-nous",
+      active: isContactActive,
+      icon: <Phone className={iconClassName(isContactActive)} aria-hidden="true" />,
+      children: contactsDropdownItems,
+    },
+  ];
 
   const breadcrumbLabelByHref = React.useMemo(() => {
     const m = new Map<string, string>();
@@ -208,7 +336,7 @@ const Navbar = () => {
       {/* Spacer: keeps page content from sliding under the fixed navbar */}
       <div
         className={cn(
-          "transition-[height] duration-200 ease-out",
+          "transition-[height] duration-200 ease-out ",
           isInnerPage ? "h-24" : "h-12",
         )}
       />
@@ -224,13 +352,13 @@ const Navbar = () => {
       >
         <NavBody>
           <NavbarLogo />
-          <NavItems items={[...items]} />
+          <NavItems items={items} />
           <div className="relative z-20 flex items-center gap-2">
             <ThemeToggle />
-            <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
+            {/* <Button variant="ghost" size="sm" asChild className="hidden sm:inline-flex">
               <Link href="/admin">Admin</Link>
-            </Button>
-            <Button size="sm" asChild>
+            </Button> */}
+            <Button size="sm" className="rounded-full" asChild>
               <Link href="/demander-un-devis">Demander un devis</Link>
             </Button>
           </div>
@@ -247,26 +375,89 @@ const Navbar = () => {
 
           <MobileNavMenu isOpen={isOpen} onClose={() => setIsOpen(false)}>
             <div className="grid w-full gap-1">
-              {items.map((item) => (
-                <Button
-                  key={item.link}
-                  variant={item.active ? "secondary" : "ghost"}
-                  size="sm"
-                  className={cn("w-full justify-start", item.active ? "font-semibold" : undefined)}
-                  asChild
-                  onClick={() => setIsOpen(false)}
-                >
-                  <Link href={item.link}>{item.name}</Link>
-                </Button>
-              ))}
+              {items.map((item) => {
+                if (item.children?.length) {
+                  return (
+                    <div key={item.name} className="pt-2">
+                      <div
+                        className={cn(
+                          "px-2 pb-1 text-xs font-semibold uppercase tracking-wide",
+                          item.active ? "text-foreground" : "text-muted-foreground",
+                        )}
+                      >
+                        {item.name}
+                      </div>
+                      <div className="grid gap-1">
+                        {item.link ? (
+                          <Button
+                            key={`${item.link}-top`}
+                            variant={item.active ? "secondary" : "ghost"}
+                            size="sm"
+                            className={cn("w-full justify-start", item.active ? "font-semibold" : undefined)}
+                            asChild
+                            onClick={() => setIsOpen(false)}
+                          >
+                            <Link href={item.link}>
+                              {item.icon ? <span aria-hidden="true">{item.icon}</span> : null}
+                              {item.name}
+                            </Link>
+                          </Button>
+                        ) : null}
+                        {item.children.map((child) => (
+                          <Button
+                            key={child.link}
+                            variant={child.active ? "secondary" : "ghost"}
+                            size="sm"
+                            className={cn("w-full justify-start", child.active ? "font-semibold" : undefined)}
+                            asChild
+                            onClick={() => setIsOpen(false)}
+                          >
+                            {child.link.startsWith("/") ? (
+                              <Link href={child.link}>
+                                {child.icon ? <span aria-hidden="true">{child.icon}</span> : null}
+                                {child.name}
+                              </Link>
+                            ) : (
+                              <a href={child.link}>
+                                {child.icon ? <span aria-hidden="true">{child.icon}</span> : null}
+                                {child.name}
+                              </a>
+                            )}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (item.link) {
+                  return (
+                    <Button
+                      key={item.link}
+                      variant={item.active ? "secondary" : "ghost"}
+                      size="sm"
+                      className={cn("w-full justify-start", item.active ? "font-semibold text-primary" : undefined)}
+                      asChild
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Link href={item.link}>
+                        {item.icon ? <span aria-hidden="true" className={item.active ? "text-primary" : "text-muted-foreground"}>{item.icon}</span> : null}
+                        <span className={item.active ? "text-primary" : "text-muted-foreground"}>{item.name}</span>
+                      </Link>
+                    </Button>
+                  );
+                }
+
+                return null;
+              })}
             </div>
 
             <div className="grid w-full gap-2 pt-2">
-              <Button variant="outline" size="sm" className="w-full" asChild>
+              {/* <Button variant="outline" size="sm" className="w-full" asChild>
                 <Link href="/admin" onClick={() => setIsOpen(false)}>
                   Admin
                 </Link>
-              </Button>
+              </Button> */}
               <Button size="sm" className="w-full" asChild>
                 <Link href="/demander-un-devis" onClick={() => setIsOpen(false)}>
                   Demander un devis
@@ -305,8 +496,8 @@ const Navbar = () => {
 
               <div className="flex items-center gap-4">
                  <div className="hidden lg:flex items-center text-xs text-muted-foreground gap-2">
-                    <span className="font-medium text-foreground">Besoin d'aide ?</span>
-                    <a href="tel:0164074768" className="hover:text-primary transition-colors font-mono">01 64 07 47 68</a>
+                    <span className="font-medium text-foreground">Besoin d&apos;aide ?</span>
+                    <a href={`tel:${siteContact.phonePrimary.tel}`} className="hover:text-primary transition-colors font-mono">{siteContact.phonePrimary.display}</a>
                  </div>
                  <div className="hidden sm:block">
                    <SiteCommandMenu />
